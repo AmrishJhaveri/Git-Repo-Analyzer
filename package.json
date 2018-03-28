@@ -1,0 +1,19 @@
+{
+  "name": "gitanalyzer",
+  "version": "1.0.0",
+  "description": "Git code commit analyzer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "analyzer"
+  ],
+  "author": "Amrish Jhaveri, Chinmay Gangal",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^15.2.5",
+    "fs": "0.0.1-security"
+  }
+}
