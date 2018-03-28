@@ -1,5 +1,6 @@
 const octokit = require('@octokit/rest')();
 const fs = require('fs');
+const _=require('lodash');
 
 const reqData=require('./RequiredData');
 
@@ -38,8 +39,8 @@ repoDetails.data.items.forEach(element => {
     var data={
         id:element.id,
         name: element.name,
-        issues_url: element.issues_url,
-        pulls_url:element.pulls_url,
+        issues_url: _.replace(element.issues_url,'{/number}',''),
+        pulls_url:_.replace(element.pulls_url,'{/number}',''),
         created_at:element.created_at,
         has_issues:element.has_issues
     };

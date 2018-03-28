@@ -2,240 +2,240 @@
   {
     "id": 22790488,
     "name": "java-design-patterns",
-    "issues_url": "https://api.github.com/repos/iluwatar/java-design-patterns/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/iluwatar/java-design-patterns/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/iluwatar/java-design-patterns/issues",
+    "pulls_url": "https://api.github.com/repos/iluwatar/java-design-patterns/pulls",
     "created_at": "2014-08-09T16:45:18Z",
     "has_issues": true
   },
   {
     "id": 31533997,
     "name": "fresco",
-    "issues_url": "https://api.github.com/repos/facebook/fresco/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/facebook/fresco/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/facebook/fresco/issues",
+    "pulls_url": "https://api.github.com/repos/facebook/fresco/pulls",
     "created_at": "2015-03-02T09:58:04Z",
     "has_issues": true
   },
   {
     "id": 26102180,
     "name": "material-dialogs",
-    "issues_url": "https://api.github.com/repos/afollestad/material-dialogs/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/afollestad/material-dialogs/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/afollestad/material-dialogs/issues",
+    "pulls_url": "https://api.github.com/repos/afollestad/material-dialogs/pulls",
     "created_at": "2014-11-03T03:21:42Z",
     "has_issues": true
   },
   {
     "id": 31865176,
     "name": "Material-Animations",
-    "issues_url": "https://api.github.com/repos/lgvalle/Material-Animations/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/lgvalle/Material-Animations/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/lgvalle/Material-Animations/issues",
+    "pulls_url": "https://api.github.com/repos/lgvalle/Material-Animations/pulls",
     "created_at": "2015-03-08T20:54:00Z",
     "has_issues": true
   },
   {
     "id": 23301468,
     "name": "AndroidSwipeLayout",
-    "issues_url": "https://api.github.com/repos/daimajia/AndroidSwipeLayout/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/daimajia/AndroidSwipeLayout/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/daimajia/AndroidSwipeLayout/issues",
+    "pulls_url": "https://api.github.com/repos/daimajia/AndroidSwipeLayout/pulls",
     "created_at": "2014-08-25T04:09:33Z",
     "has_issues": true
   },
   {
     "id": 21113349,
     "name": "AndroidViewAnimations",
-    "issues_url": "https://api.github.com/repos/daimajia/AndroidViewAnimations/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/daimajia/AndroidViewAnimations/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/daimajia/AndroidViewAnimations/issues",
+    "pulls_url": "https://api.github.com/repos/daimajia/AndroidViewAnimations/pulls",
     "created_at": "2014-06-23T03:53:13Z",
     "has_issues": true
   },
   {
     "id": 69953445,
     "name": "zheng",
-    "issues_url": "https://api.github.com/repos/shuzheng/zheng/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/shuzheng/zheng/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/shuzheng/zheng/issues",
+    "pulls_url": "https://api.github.com/repos/shuzheng/zheng/pulls",
     "created_at": "2016-10-04T10:07:06Z",
     "has_issues": true
   },
   {
     "id": 17804584,
     "name": "java8-tutorial",
-    "issues_url": "https://api.github.com/repos/winterbe/java8-tutorial/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/winterbe/java8-tutorial/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/winterbe/java8-tutorial/issues",
+    "pulls_url": "https://api.github.com/repos/winterbe/java8-tutorial/pulls",
     "created_at": "2014-03-16T17:25:43Z",
     "has_issues": true
   },
   {
     "id": 26568234,
     "name": "android-Ultra-Pull-To-Refresh",
-    "issues_url": "https://api.github.com/repos/liaohuqiu/android-Ultra-Pull-To-Refresh/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/liaohuqiu/android-Ultra-Pull-To-Refresh/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/liaohuqiu/android-Ultra-Pull-To-Refresh/issues",
+    "pulls_url": "https://api.github.com/repos/liaohuqiu/android-Ultra-Pull-To-Refresh/pulls",
     "created_at": "2014-11-13T03:13:10Z",
     "has_issues": true
   },
   {
     "id": 83285138,
     "name": "vlayout",
-    "issues_url": "https://api.github.com/repos/alibaba/vlayout/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/alibaba/vlayout/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/alibaba/vlayout/issues",
+    "pulls_url": "https://api.github.com/repos/alibaba/vlayout/pulls",
     "created_at": "2017-02-27T08:11:47Z",
     "has_issues": true
   },
   {
     "id": 53662249,
     "name": "react-native-navigation",
-    "issues_url": "https://api.github.com/repos/wix/react-native-navigation/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/wix/react-native-navigation/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/wix/react-native-navigation/issues",
+    "pulls_url": "https://api.github.com/repos/wix/react-native-navigation/pulls",
     "created_at": "2016-03-11T11:22:54Z",
     "has_issues": true
   },
   {
     "id": 14046563,
     "name": "Android-Bootstrap",
-    "issues_url": "https://api.github.com/repos/Bearded-Hen/Android-Bootstrap/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/Bearded-Hen/Android-Bootstrap/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/Bearded-Hen/Android-Bootstrap/issues",
+    "pulls_url": "https://api.github.com/repos/Bearded-Hen/Android-Bootstrap/pulls",
     "created_at": "2013-11-01T15:36:17Z",
     "has_issues": true
   },
   {
     "id": 51199322,
     "name": "JiaoZiVideoPlayer",
-    "issues_url": "https://api.github.com/repos/lipangit/JiaoZiVideoPlayer/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/lipangit/JiaoZiVideoPlayer/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/lipangit/JiaoZiVideoPlayer/issues",
+    "pulls_url": "https://api.github.com/repos/lipangit/JiaoZiVideoPlayer/pulls",
     "created_at": "2016-02-06T11:04:24Z",
     "has_issues": true
   },
   {
     "id": 715605,
     "name": "jedis",
-    "issues_url": "https://api.github.com/repos/xetorthio/jedis/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/xetorthio/jedis/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/xetorthio/jedis/issues",
+    "pulls_url": "https://api.github.com/repos/xetorthio/jedis/pulls",
     "created_at": "2010-06-11T13:04:43Z",
     "has_issues": true
   },
   {
     "id": 6207167,
     "name": "mockito",
-    "issues_url": "https://api.github.com/repos/mockito/mockito/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/mockito/mockito/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/mockito/mockito/issues",
+    "pulls_url": "https://api.github.com/repos/mockito/mockito/pulls",
     "created_at": "2012-10-13T20:27:12Z",
     "has_issues": true
   },
   {
     "id": 45808756,
     "name": "FlycoTabLayout",
-    "issues_url": "https://api.github.com/repos/H07000223/FlycoTabLayout/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/H07000223/FlycoTabLayout/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/H07000223/FlycoTabLayout/issues",
+    "pulls_url": "https://api.github.com/repos/H07000223/FlycoTabLayout/pulls",
     "created_at": "2015-11-09T01:53:19Z",
     "has_issues": true
   },
   {
     "id": 221862,
     "name": "lombok",
-    "issues_url": "https://api.github.com/repos/rzwitserloot/lombok/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/rzwitserloot/lombok/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/rzwitserloot/lombok/issues",
+    "pulls_url": "https://api.github.com/repos/rzwitserloot/lombok/pulls",
     "created_at": "2009-06-08T19:46:41Z",
     "has_issues": true
   },
   {
     "id": 442430,
     "name": "jsoup",
-    "issues_url": "https://api.github.com/repos/jhy/jsoup/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/jhy/jsoup/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/jhy/jsoup/issues",
+    "pulls_url": "https://api.github.com/repos/jhy/jsoup/pulls",
     "created_at": "2009-12-19T01:29:58Z",
     "has_issues": true
   },
   {
     "id": 42984727,
     "name": "material-theme-jetbrains",
-    "issues_url": "https://api.github.com/repos/ChrisRM/material-theme-jetbrains/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/ChrisRM/material-theme-jetbrains/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/ChrisRM/material-theme-jetbrains/issues",
+    "pulls_url": "https://api.github.com/repos/ChrisRM/material-theme-jetbrains/pulls",
     "created_at": "2015-09-23T07:15:04Z",
     "has_issues": true
   },
   {
     "id": 20394581,
     "name": "AndroidImageSlider",
-    "issues_url": "https://api.github.com/repos/daimajia/AndroidImageSlider/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/daimajia/AndroidImageSlider/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/daimajia/AndroidImageSlider/issues",
+    "pulls_url": "https://api.github.com/repos/daimajia/AndroidImageSlider/pulls",
     "created_at": "2014-06-02T06:04:17Z",
     "has_issues": true
   },
   {
     "id": 9754983,
     "name": "tutorials",
-    "issues_url": "https://api.github.com/repos/eugenp/tutorials/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/eugenp/tutorials/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/eugenp/tutorials/issues",
+    "pulls_url": "https://api.github.com/repos/eugenp/tutorials/pulls",
     "created_at": "2013-04-29T18:26:36Z",
     "has_issues": true
   },
   {
     "id": 19340009,
     "name": "NumberProgressBar",
-    "issues_url": "https://api.github.com/repos/daimajia/NumberProgressBar/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/daimajia/NumberProgressBar/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/daimajia/NumberProgressBar/issues",
+    "pulls_url": "https://api.github.com/repos/daimajia/NumberProgressBar/pulls",
     "created_at": "2014-05-01T08:54:25Z",
     "has_issues": true
   },
   {
     "id": 20593099,
     "name": "circular-progress-button",
-    "issues_url": "https://api.github.com/repos/dmytrodanylyk/circular-progress-button/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/dmytrodanylyk/circular-progress-button/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/dmytrodanylyk/circular-progress-button/issues",
+    "pulls_url": "https://api.github.com/repos/dmytrodanylyk/circular-progress-button/pulls",
     "created_at": "2014-06-07T12:58:48Z",
     "has_issues": false
   },
   {
     "id": 25208398,
     "name": "RippleEffect",
-    "issues_url": "https://api.github.com/repos/traex/RippleEffect/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/traex/RippleEffect/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/traex/RippleEffect/issues",
+    "pulls_url": "https://api.github.com/repos/traex/RippleEffect/pulls",
     "created_at": "2014-10-14T13:32:51Z",
     "has_issues": true
   },
   {
     "id": 88970564,
     "name": "QMUI_Android",
-    "issues_url": "https://api.github.com/repos/QMUI/QMUI_Android/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/QMUI/QMUI_Android/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/QMUI/QMUI_Android/issues",
+    "pulls_url": "https://api.github.com/repos/QMUI/QMUI_Android/pulls",
     "created_at": "2017-04-21T10:03:18Z",
     "has_issues": true
   },
   {
     "id": 889932,
     "name": "scribejava",
-    "issues_url": "https://api.github.com/repos/scribejava/scribejava/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/scribejava/scribejava/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/scribejava/scribejava/issues",
+    "pulls_url": "https://api.github.com/repos/scribejava/scribejava/pulls",
     "created_at": "2010-09-05T19:11:40Z",
     "has_issues": true
   },
   {
     "id": 15648899,
     "name": "coursera-android",
-    "issues_url": "https://api.github.com/repos/aporter/coursera-android/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/aporter/coursera-android/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/aporter/coursera-android/issues",
+    "pulls_url": "https://api.github.com/repos/aporter/coursera-android/pulls",
     "created_at": "2014-01-05T09:55:31Z",
     "has_issues": true
   },
   {
     "id": 62685536,
     "name": "gitpitch",
-    "issues_url": "https://api.github.com/repos/gitpitch/gitpitch/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/gitpitch/gitpitch/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/gitpitch/gitpitch/issues",
+    "pulls_url": "https://api.github.com/repos/gitpitch/gitpitch/pulls",
     "created_at": "2016-07-06T02:42:24Z",
     "has_issues": true
   },
   {
     "id": 24161015,
     "name": "DBFlow",
-    "issues_url": "https://api.github.com/repos/Raizlabs/DBFlow/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/Raizlabs/DBFlow/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/Raizlabs/DBFlow/issues",
+    "pulls_url": "https://api.github.com/repos/Raizlabs/DBFlow/pulls",
     "created_at": "2014-09-17T20:21:02Z",
     "has_issues": true
   },
   {
     "id": 30562287,
     "name": "material-calendarview",
-    "issues_url": "https://api.github.com/repos/prolificinteractive/material-calendarview/issues{/number}",
-    "pulls_url": "https://api.github.com/repos/prolificinteractive/material-calendarview/pulls{/number}",
+    "issues_url": "https://api.github.com/repos/prolificinteractive/material-calendarview/issues",
+    "pulls_url": "https://api.github.com/repos/prolificinteractive/material-calendarview/pulls",
     "created_at": "2015-02-09T22:31:56Z",
     "has_issues": true
   }
