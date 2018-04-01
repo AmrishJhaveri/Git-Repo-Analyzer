@@ -16,36 +16,47 @@ octokit.authenticate({
 // var allIssues = [], allPulls = [];
 
 var CONSTANTS = {
-    REPOS_DATA_FILE: './GitAnalyzer/searchData.json'
+    //REPOS_DATA_FILE: './GitAnalyzer/searchData.json',
+    REQUIRED_DATA_JSON: './GitAnalyzer/RequiredData.json'
 };
 
 
 var getParams = (page_no) => {
 
-    var q_param = "language:java license:mit";
-    var sort_param = 'stars';
-    var order_param = 'desc';
+    let q_param = "language:java license:mit";
+    let sort_param = 'stars';
+    let order_param = 'desc';
+    let per_page_number = 3;
 
     return params = {
         q: q_param,
         sort: sort_param,
         order: order_param,
-        page: page_no
+        page: page_no,
+        per_page: per_page_number
     }
 };
 
 // Get the repositories meta data. Store it into a JSON file
-octokit.search.repos(getParams(1)).then(result => {
-    fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result, undefined, 2));
-}, reject => {
-    console.log('error', JSON.stringify(reject));
-});
+async function allRepoData() {
+    try {
+        const result_data = await octokit.search.repos(getParams(1));
+        console.log('after get repo data');
+        //fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result_data, undefined, 2));
+        console.log('after writing repo file');
+        getAllPullRequests(result_data);
+
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
 
 //iterate over the data and store the required info from each repo metadata.
-async function getAllPullRequests() {
-
+async function getAllPullRequests(repoDetails) {
+    console.log('Reading after writing to the file');
     //read the file contents
-    var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
+    //var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
 
     for (const element of repoDetails.data.items) {
         //repoDetails.data.items.forEach(element => {
@@ -58,21 +69,18 @@ async function getAllPullRequests() {
             created_at: element.created_at,
             has_issues: element.has_issues
         };
-        // allIssues.push(axios.get(data.issues_url).catch((e)=>{console.log(e)}));
-        //allPulls.push(axios.get(data.pulls_url).catch((e)=>{console.log(e)}));
-        // var pull_requests;
-        let resultant_data = await getOnlyPullRequests( data.owner,data.name );
-        data['pull_requests'] = resultant_data;
+
+        let resultant_data = await getOnlyPullRequests(data.owner, data.name);
+        data['pull_requests'] = resultant_data.data;
         reqData.addData(data)
-        console.log(resultant_data);
+        console.log('after pull request call');
 
     };
     console.log('After iterating all the elements');
-    //console.log("ReqData:", JSON.stringify(reqData.getData(), undefined, 2));
-    fs.writeFileSync('./GitAnalyzer/requiredData.json', JSON.stringify(reqData.getData(), undefined, 2));
+    fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
 }
 
-async function getOnlyPullRequests(data_owner,data_name) {
+async function getOnlyPullRequests(data_owner, data_name) {
     try {
         return await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' })
     }
@@ -81,9 +89,5 @@ async function getOnlyPullRequests(data_owner,data_name) {
     }
 }
 
-
-getAllPullRequests();
+allRepoData();
 console.log('Repo data is collected');
-
-console.log('Getting Issues data');
-
