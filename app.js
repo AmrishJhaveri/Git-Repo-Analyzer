@@ -40,7 +40,7 @@ var getParams = (page_no) => {
 // Get the repositories meta data. Store it into a JSON file
 async function allRepoData() {
     try {
-        
+
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after get repo data');
         //fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result_data, undefined, 2));
@@ -61,34 +61,17 @@ async function getAllPullRequests(repoDetails) {
     //read the file contents
     //var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
     console.time('allRepoData');
-    
-    const promises=repoDetails.data.items.map(getAndConvertData)
+
+    const promises = repoDetails.data.items.map(getAndConvertData)
     await Promise.all(promises);
-    // for (const element of repoDetails.data.items) {
-    //     //repoDetails.data.items.forEach(element => {
-    //     let data = {
-    //         id: element.id,
-    //         name: element.name,
-    //         owner: element.owner.login,
-    //         //issues_url: _.replace(element.issues_url, '{/number}', ''),
-    //         pulls_url: _.replace(element.pulls_url, '{/number}', ''),
-    //         created_at: element.created_at,
-    //         has_issues: element.has_issues
-    //     };
 
-    //     let resultant_data = await getOnlyPullRequests(data.owner, data.name);
-    //     data['pull_requests'] = resultant_data.data;
-    //     reqData.addData(data)
-    //     console.log('after pull request call');
-
-    // };
     console.log('After iterating all the elements');
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
     console.timeEnd('allRepoData');
-    
+
 }
 
-async function getAndConvertData(element){
+async function getAndConvertData(element, index) {
 
     let data = {
         id: element.id,
@@ -103,7 +86,7 @@ async function getAndConvertData(element){
     let resultant_data = await getOnlyPullRequests(data.owner, data.name);
     data['pull_requests'] = resultant_data.data;
     reqData.addData(data)
-    console.log('after pull request call');
+    console.log('after pull request call:'+index);
 }
 
 async function getOnlyPullRequests(data_owner, data_name) {
