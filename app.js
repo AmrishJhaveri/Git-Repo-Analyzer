@@ -17,7 +17,7 @@ octokit.authenticate({
 
 var CONSTANTS = {
     //REPOS_DATA_FILE: './GitAnalyzer/searchData.json',
-    REQUIRED_DATA_JSON: './GitAnalyzer/RequiredData.json'
+    REQUIRED_DATA_JSON: './RequiredData.json'
 };
 
 
