@@ -26,7 +26,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 30;
+    let per_page_number = 5;
 
     return params = {
         q: q_param,
@@ -44,7 +44,7 @@ async function allRepoData() {
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after get repo data');
         //fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result_data, undefined, 2));
-        console.log('after writing repo file');
+        // console.log('after writing repo file');
         getAllPullRequests(result_data);
 
     }
@@ -57,17 +57,17 @@ async function allRepoData() {
 
 //iterate over the data and store the required info from each repo metadata.
 async function getAllPullRequests(repoDetails) {
-    console.log('Reading after writing to the file');
+    // console.log('Reading after writing to the file');
     //read the file contents
     //var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
-    console.time('allRepoData');
+    console.time('getAllPullRequests');
 
     const promises = repoDetails.data.items.map(getAndConvertData)
     await Promise.all(promises);
 
     console.log('After iterating all the elements');
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
-    console.timeEnd('allRepoData');
+    console.timeEnd('getAllPullRequests');
 
 }
 
