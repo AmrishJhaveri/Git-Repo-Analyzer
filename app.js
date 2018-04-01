@@ -26,7 +26,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 3;
+    let per_page_number = 30;
 
     return params = {
         q: q_param,
@@ -40,6 +40,7 @@ var getParams = (page_no) => {
 // Get the repositories meta data. Store it into a JSON file
 async function allRepoData() {
     try {
+        
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after get repo data');
         //fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result_data, undefined, 2));
@@ -50,6 +51,8 @@ async function allRepoData() {
     catch (e) {
         console.log(e);
     }
+    // let end=performance.now();
+    // console.log('Entire operation took:'+ (end-start)+' ms');
 }
 
 //iterate over the data and store the required info from each repo metadata.
@@ -57,27 +60,50 @@ async function getAllPullRequests(repoDetails) {
     console.log('Reading after writing to the file');
     //read the file contents
     //var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
+    console.time('allRepoData');
+    
+    const promises=repoDetails.data.items.map(getAndConvertData)
+    await Promise.all(promises);
+    // for (const element of repoDetails.data.items) {
+    //     //repoDetails.data.items.forEach(element => {
+    //     let data = {
+    //         id: element.id,
+    //         name: element.name,
+    //         owner: element.owner.login,
+    //         //issues_url: _.replace(element.issues_url, '{/number}', ''),
+    //         pulls_url: _.replace(element.pulls_url, '{/number}', ''),
+    //         created_at: element.created_at,
+    //         has_issues: element.has_issues
+    //     };
 
-    for (const element of repoDetails.data.items) {
-        //repoDetails.data.items.forEach(element => {
-        let data = {
-            id: element.id,
-            name: element.name,
-            owner: element.owner.login,
-            //issues_url: _.replace(element.issues_url, '{/number}', ''),
-            pulls_url: _.replace(element.pulls_url, '{/number}', ''),
-            created_at: element.created_at,
-            has_issues: element.has_issues
-        };
+    //     let resultant_data = await getOnlyPullRequests(data.owner, data.name);
+    //     data['pull_requests'] = resultant_data.data;
+    //     reqData.addData(data)
+    //     console.log('after pull request call');
 
-        let resultant_data = await getOnlyPullRequests(data.owner, data.name);
-        data['pull_requests'] = resultant_data.data;
-        reqData.addData(data)
-        console.log('after pull request call');
-
-    };
+    // };
     console.log('After iterating all the elements');
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
+    console.timeEnd('allRepoData');
+    
+}
+
+async function getAndConvertData(element){
+
+    let data = {
+        id: element.id,
+        name: element.name,
+        owner: element.owner.login,
+        //issues_url: _.replace(element.issues_url, '{/number}', ''),
+        pulls_url: _.replace(element.pulls_url, '{/number}', ''),
+        created_at: element.created_at,
+        has_issues: element.has_issues
+    };
+
+    let resultant_data = await getOnlyPullRequests(data.owner, data.name);
+    data['pull_requests'] = resultant_data.data;
+    reqData.addData(data)
+    console.log('after pull request call');
 }
 
 async function getOnlyPullRequests(data_owner, data_name) {
@@ -90,4 +116,4 @@ async function getOnlyPullRequests(data_owner, data_name) {
 }
 
 allRepoData();
-console.log('Repo data is collected');
+console.log('Repo data collection in progress');
