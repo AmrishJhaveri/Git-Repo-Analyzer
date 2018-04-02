@@ -15,14 +15,10 @@ octokit.authenticate({
     token: 'f261168993b8ff10be45e863b036ac44040b678f'
 })
 
-
-// var allIssues = [], allPulls = [];
-
 var CONSTANTS = {
     //REPOS_DATA_FILE: './GitAnalyzer/searchData.json',
     REQUIRED_DATA_JSON: './RequiredData.json'
 };
-
 
 var getParams = (page_no) => {
 
@@ -43,26 +39,18 @@ var getParams = (page_no) => {
 // Get the repositories meta data. Store it into a JSON file
 async function allRepoData() {
     try {
-
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after get repo data');
-        //fs.writeFileSync(CONSTANTS.REPOS_DATA_FILE, JSON.stringify(result_data, undefined, 2));
-        // console.log('after writing repo file');
         getAllPullRequests(result_data);
-
     }
     catch (e) {
         console.log(e);
     }
-    // let end=performance.now();
-    // console.log('Entire operation took:'+ (end-start)+' ms');
 }
 
 //iterate over the data and store the required info from each repo metadata.
 async function getAllPullRequests(repoDetails) {
-    // console.log('Reading after writing to the file');
     //read the file contents
-    //var repoDetails = JSON.parse(fs.readFileSync(CONSTANTS.REPOS_DATA_FILE));
     console.time('getAllPullRequests');
 
     const promises = repoDetails.data.items.map(getAndConvertData)
@@ -71,7 +59,6 @@ async function getAllPullRequests(repoDetails) {
     console.log('After iterating all the elements');
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
     console.timeEnd('getAllPullRequests');
-
 }
 
 async function getAndConvertData(element, index) {
@@ -100,9 +87,7 @@ async function getOnlyPullRequests(data_owner, data_name) {
         const promises = resultant_pull_requests.data.map(processEachPull);
 
         await Promise.all(promises);
-
         console.log('After each diff captured for the repo');
-
         return resultant_pull_requests;
     }
     catch (e) {
@@ -117,8 +102,8 @@ async function processEachPull(eachPR) {
         const response = await axios.get(eachPR.diff_url, {
             responseType: 'text'
         });
-        
-        eachPR['diff_data']=parse(response.data);
+
+        eachPR['diff_data'] = parse(response.data);
         console.log('after parsing the data');
     }
     catch (e) {
