@@ -1,6 +1,9 @@
 const octokit = require('@octokit/rest')();
 const fs = require('fs');
 const _ = require('lodash');
+const axios = require('axios');
+const parse = require('parse-diff');
+const utf8 = require('utf8')
 
 const reqData = require('./RequiredData');
 
@@ -26,7 +29,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 5;
+    let per_page_number = 2;
 
     return params = {
         q: q_param,
@@ -86,16 +89,42 @@ async function getAndConvertData(element, index) {
     let resultant_data = await getOnlyPullRequests(data.owner, data.name);
     data['pull_requests'] = resultant_data.data;
     reqData.addData(data)
-    console.log('after pull request call:'+index);
+    console.log('after pull request call:' + index);
 }
 
 async function getOnlyPullRequests(data_owner, data_name) {
     try {
-        return await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' })
+        let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
+        console.log(typeof resultant_pull_requests.data);
+        console.log(resultant_pull_requests.data.length);
+        const promises = resultant_pull_requests.data.map(processEachPull);
+
+        await Promise.all(promises);
+
+        console.log('After each diff captured for the repo');
+
+        return resultant_pull_requests;
     }
     catch (e) {
         console.log(e);
     }
+}
+
+async function processEachPull(eachPR) {
+
+    try {
+        // let URL= JSON.stringify(eachPR.diff_url);
+        const response = await axios.get(eachPR.diff_url, {
+            responseType: 'text'
+        });
+        
+        eachPR['diff_data']=parse(response.data);
+        console.log('after parsing the data');
+    }
+    catch (e) {
+        console.error(e);
+    }
+    return eachPR;
 }
 
 allRepoData();
