@@ -3,7 +3,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const axios = require('axios');
 const parse = require('parse-diff');
-const utf8 = require('utf8')
+//const utf8 = require('utf8')
 
 const reqData = require('./RequiredData');
 
@@ -25,7 +25,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 2;
+    let per_page_number = 15;
 
     return params = {
         q: q_param,
