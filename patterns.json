@@ -1,0 +1,16 @@
+[
+	{
+		"id"		: "mockSetting",
+		"rgex"		: "[+-][ ]*mockSettings.name(.*)",
+		"rgexFlag"	: "gm"
+		
+	},
+	{
+		"id"		: "import",
+		"rgex"		: "[+-][ ]*import "
+	},
+	{
+		"id"		: "annotation",
+		"rgex"		: "[+-][ ]*@[A-Z]"	
+	}
+]
