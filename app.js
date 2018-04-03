@@ -25,7 +25,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 10;
+    let per_page_number = 1;
 
     return params = {
         q: q_param,
@@ -50,7 +50,6 @@ async function allRepoData() {
 
 //iterate over the data and store the required info from each repo metadata.
 async function getAllPullRequests(repoDetails) {
-    //read the file contents
     console.time('getAllPullRequests');
 
     const promises = repoDetails.data.items.map(getAndConvertData)
@@ -90,7 +89,7 @@ async function getOnlyPullRequests(data_owner, data_name) {
         return resultant_pull_requests;
     }
     catch (e) {
-        console.log(e);
+        console.log(e.config.url);
     }
 }
 
@@ -106,13 +105,56 @@ async function processEachPull(eachPR) {
         eachPR['repo'] = undefined;
         eachPR['base'] = undefined;
 
-        eachPR['diff_data'] = parse(response.data);
+        // getting the JSON after parsing the diff file
+        // eachPR['diff_data'] = parse(response.data);
+        let diff_data = parse(response.data);
+        eachPR['diff_data'] = diff_data;
+
+        //filtering : removing the objects with NORMAL type
+        let promises = diff_data.map(processEachFile);
+        await Promise.all(promises);
+
         console.log('after parsing the data');
     }
     catch (e) {
         console.error(e.config.url);
     }
     return eachPR;
+}
+
+async function processEachFile(fileElement) {
+    try {
+        //process array of chunks in each file
+        let promises = fileElement.chunks.map(processEachChunk)
+        await Promise.all(promises);
+    }
+    catch (e) {
+        console.log(e.config.url);
+    }
+}
+
+async function processEachChunk(chunkElement) {
+    try {
+        //process each change array
+        let promises = chunkElement.changes.map(processEachChange);
+        await Promise.all(promises);
+    }
+    catch (e) {
+        console.log(e.config.url);
+    }
+}
+
+async function processEachChange(eachChange) {
+
+    //check normal change or not
+    console.log(eachChange.type)
+    //If not normal, check the patterns
+    //Promises.all needs to be used over here, else it will call one after the other.
+
+    //add to ADD Map
+
+    //add to DEL Map
+
 }
 
 allRepoData();
