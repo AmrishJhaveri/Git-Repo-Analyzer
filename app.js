@@ -25,7 +25,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 15;
+    let per_page_number = 10;
 
     return params = {
         q: q_param,
@@ -82,8 +82,7 @@ async function getAndConvertData(element, index) {
 async function getOnlyPullRequests(data_owner, data_name) {
     try {
         let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
-        console.log(typeof resultant_pull_requests.data);
-        console.log(resultant_pull_requests.data.length);
+        console.log('No. of pull requests:' + resultant_pull_requests.data.length + ' of repo:' + data_name);
         const promises = resultant_pull_requests.data.map(processEachPull);
 
         await Promise.all(promises);
@@ -98,16 +97,20 @@ async function getOnlyPullRequests(data_owner, data_name) {
 async function processEachPull(eachPR) {
 
     try {
-        // let URL= JSON.stringify(eachPR.diff_url);
         const response = await axios.get(eachPR.diff_url, {
             responseType: 'text'
         });
+        console.log('Before parsing:' + eachPR.url)
+        // remove the following data from the pull requests
+        eachPR['head'] = undefined;
+        eachPR['repo'] = undefined;
+        eachPR['base'] = undefined;
 
         eachPR['diff_data'] = parse(response.data);
         console.log('after parsing the data');
     }
     catch (e) {
-        console.error(e);
+        console.error(e.config.url);
     }
     return eachPR;
 }
