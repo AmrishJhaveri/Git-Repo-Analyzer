@@ -9,7 +9,7 @@ const reqData = require('./RequiredData');
 
 // var allDataMap = new Map();
 // var map = Map.prototype;
-const accessToken='f261168993b8ff10be45e863b036ac44040b678f';
+const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
     type: 'token',
     token: accessToken
@@ -97,23 +97,11 @@ async function processEachPull(eachPR) {
 
     try {
 
-        //get the data from issue URL
-        // const response_issue=axios.get(eachPR.issue_url);
+        let reqURL = [axios.get(eachPR.issue_url + "?access_token=" + accessToken), axios.get(eachPR.diff_url, { responseType: 'text' })];
 
-        //get the Diff data
-        // const response = axios.get(eachPR.diff_url, {
-        //     responseType: 'text'
-        // });
-        // try{
-        let reqURL=[axios.get(eachPR.issue_url+"?access_token="+accessToken),axios.get(eachPR.diff_url, {responseType: 'text'})];
-        
-        const [response_issue,response]= await Promise.all(reqURL);
+        const [response_issue, response] = await Promise.all(reqURL);
 
-        // }
-        // catch(e){
-        //     console.log(e);
-        // }
-        console.log('Before parsing:'+eachPR.url);
+        console.log('Before parsing:' + eachPR.url);
         // remove the following data from the pull requests
         eachPR['head'] = undefined;
         eachPR['repo'] = undefined;
@@ -123,7 +111,7 @@ async function processEachPull(eachPR) {
         // eachPR['diff_data'] = parse(response.data);
         let diff_data = parse(response.data);
         eachPR['diff_data'] = diff_data;
-        eachPR['issue_data']=response_issue.data;
+        eachPR['issue_data'] = response_issue.data;
 
         //filtering : removing the objects with NORMAL type
         let promises = diff_data.map(processEachFile);
