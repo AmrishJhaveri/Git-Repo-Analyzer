@@ -9,10 +9,10 @@ const reqData = require('./RequiredData');
 
 // var allDataMap = new Map();
 // var map = Map.prototype;
-
+const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
     type: 'token',
-    token: 'f261168993b8ff10be45e863b036ac44040b678f'
+    token: accessToken
 })
 
 var CONSTANTS = {
@@ -96,10 +96,12 @@ async function getOnlyPullRequests(data_owner, data_name) {
 async function processEachPull(eachPR) {
 
     try {
-        const response = await axios.get(eachPR.diff_url, {
-            responseType: 'text'
-        });
-        console.log('Before parsing:' + eachPR.url)
+
+        let reqURL = [axios.get(eachPR.issue_url + "?access_token=" + accessToken), axios.get(eachPR.diff_url, { responseType: 'text' })];
+
+        const [response_issue, response] = await Promise.all(reqURL);
+
+        console.log('Before parsing:' + eachPR.url);
         // remove the following data from the pull requests
         eachPR['head'] = undefined;
         eachPR['repo'] = undefined;
@@ -109,6 +111,7 @@ async function processEachPull(eachPR) {
         // eachPR['diff_data'] = parse(response.data);
         let diff_data = parse(response.data);
         eachPR['diff_data'] = diff_data;
+        eachPR['issue_data'] = response_issue.data;
 
         //filtering : removing the objects with NORMAL type
         let promises = diff_data.map(processEachFile);
@@ -147,7 +150,7 @@ async function processEachChunk(chunkElement) {
 async function processEachChange(eachChange) {
 
     //check normal change or not
-    console.log(eachChange.type)
+    // console.log(eachChange.type)
     //If not normal, check the patterns
     //Promises.all needs to be used over here, else it will call one after the other.
 
