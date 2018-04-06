@@ -12,5 +12,9 @@
 	{
 		"id"		: "annotation",
 		"rgex"		: "[+-][ ]*@[A-Z]"	
+	},
+	{
+		"id"		: "parameter change",
+		"rgex"		: "[\(\)]"
 	}
 ]
