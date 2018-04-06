@@ -42,4 +42,5 @@ JSON.parse(jsonFileElements).forEach(function(jsonFileElement){ //loop for repo
 	console.log("\n");
 });
 
-cj.checkReplaceParameter("mockSettings.name(field.getName());\r","mockSettings.name(name);\r");
+if(cj.checkReplaceParameter("mockSettings.name(field.getName());\r","mockSettings.name(name);\r"))
+	console.log("found parameter change");

@@ -12,9 +12,18 @@ module.exports =
 	{
 		//console.log('checking if parameters replaced');
 		var arr1 = str1.split(/[\(\)]/);
-		var arr2 = str2.split('(');
+		var arr2 = str2.split(/[\(\)]/);
 
 		console.log(arr1);
 		console.log(arr2);
+
+		//console.log(arr1 == arr2);
+		if(arr1[0]!=arr2[0])
+			return false;
+
+		if (arr1.every(function(u, i){return u === arr2[i];})	) 
+			return true
+		else
+			return false
 	}
 };
