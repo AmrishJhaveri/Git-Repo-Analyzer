@@ -7,11 +7,6 @@ const parse = require('parse-diff');
 
 const reqData = require('./RequiredData');
 
-// var addChangesMap = new Map();
-// var deleteChangesMap = new Map();
-// var map = Map.prototype;
-
-
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
     type: 'token',
@@ -111,7 +106,6 @@ async function processEachPull(eachPR) {
         eachPR['base'] = undefined;
 
         // getting the JSON after parsing the diff file
-        // eachPR['diff_data'] = parse(response.data);
         let diff_data = parse(response.data);
         eachPR['diff_data'] = diff_data;
         eachPR['issue_data'] = response_issue.data;
@@ -157,38 +151,38 @@ async function processEachChunk(chunkElement) {
             }
             return map;
         }, {});
-        console.log('add:' + JSON.stringify(addChangesMap, undefined, 2));
-        console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
-        chunkElement['addMap']=JSON.stringify(addChangesMap, undefined, 2);
-        chunkElement['delMap']=JSON.stringify(deleteChangesMap, undefined, 2);
+        
+        chunkElement['addMap'] = JSON.stringify(addChangesMap, undefined, 2);
+        chunkElement['delMap'] = JSON.stringify(deleteChangesMap, undefined, 2);
+
         //process each change array
-        let promises = chunkElement.changes.map(eachChangeWithParams(chunkElement.newLines - chunkElement.oldLines));
+        let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines));
         await Promise.all(promises);
 
-
-        //TODO:process patterns with add and delete changes.
     }
     catch (e) {
         console.log(e);
     }
 }
 
-function eachChangeWithParams(lineDiff) {
+function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
     return async function processEachChange(eachChange) {
 
+        console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
         //check normal change or not
-        // console.log('lineDiff:', lineDiff);
-        //If not normal, check the patterns
-        //Promises.all needs to be used over here, else it will call one after the other.
+        if (!eachChange.normal) {
+            // console.log('lineDiff:', lineDiff);
 
-        //add to ADD Map
-        // if (eachChange.add) {
-        //     addChangesMap.prototype.set(lineDiff, eachChange.content);
-        // }
-        //add to DEL Map
-        // else if (eachChange.del) {
-        //     deleteChangesMap.prototype.set(lineDiff, eachChange.content);
-        // }
+            //If not normal, check the patterns
+            //Promises.all needs to be used over here, else it will call one after the other.
+
+            //check one change at a time
+
+
+            //check add-del pair together
+            //TODO:process patterns with add and delete changes.
+            //iterate over all add changes while comparing with del changes and vice versa.
+        }
     }
 }
 
