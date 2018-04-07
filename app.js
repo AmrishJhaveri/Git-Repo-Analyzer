@@ -7,8 +7,11 @@ const parse = require('parse-diff');
 
 const reqData = require('./RequiredData');
 
-// var allDataMap = new Map();
+// var addChangesMap = new Map();
+// var deleteChangesMap = new Map();
 // var map = Map.prototype;
+
+
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
     type: 'token',
@@ -127,6 +130,9 @@ async function processEachPull(eachPR) {
 
 async function processEachFile(fileElement) {
     try {
+
+        //TODO:check fileElement for the extension of the file (.java)
+
         //process array of chunks in each file
         let promises = fileElement.chunks.map(processEachChunk)
         await Promise.all(promises);
@@ -138,26 +144,40 @@ async function processEachFile(fileElement) {
 
 async function processEachChunk(chunkElement) {
     try {
+        //FIXME: remove maps and use filter for add and delete    
+        // let addChangesMap = new Map();
+        // let deleteChangesMap = new Map();
+
         //process each change array
-        let promises = chunkElement.changes.map(processEachChange);
+        let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap,deleteChangesMap,chunkElement.newLines - chunkElement.oldLines));
         await Promise.all(promises);
+
+        console.log('add:'+JSON.stringify(addChangesMap,undefined,2));
+
+        //TODO:process patterns with add and delete changes.
     }
     catch (e) {
         console.log(e.config.url);
     }
 }
 
-async function processEachChange(eachChange) {
+function eachChangeWithParams(addChangesMap,deleteChangesMap,lineDiff) {
+    return async function processEachChange(eachChange) {
 
-    //check normal change or not
-    // console.log(eachChange.type)
-    //If not normal, check the patterns
-    //Promises.all needs to be used over here, else it will call one after the other.
+        //check normal change or not
+        console.log('lineDiff:', lineDiff);
+        //If not normal, check the patterns
+        //Promises.all needs to be used over here, else it will call one after the other.
 
-    //add to ADD Map
-
-    //add to DEL Map
-
+        //add to ADD Map
+        // if (eachChange.add) {
+        //     addChangesMap.prototype.set(lineDiff, eachChange.content);
+        // }
+        //add to DEL Map
+        // else if (eachChange.del) {
+        //     deleteChangesMap.prototype.set(lineDiff, eachChange.content);
+        // }
+    }
 }
 
 allRepoData();
