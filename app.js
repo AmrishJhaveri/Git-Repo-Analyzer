@@ -145,27 +145,38 @@ async function processEachFile(fileElement) {
 async function processEachChunk(chunkElement) {
     try {
         //FIXME: remove maps and use filter for add and delete    
-        // let addChangesMap = new Map();
-        // let deleteChangesMap = new Map();
+        var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
+            if (ele.add) {
+                changeMap[ele.ln] = ele.content;
+            }
+            return changeMap;
+        }, {});
+        var deleteChangesMap = chunkElement.changes.reduce((map, ele) => {
+            if (ele.del) {
+                map[ele.ln] = ele.content;
+            }
+            return map;
+        }, {});
+        console.log('add:' + JSON.stringify(addChangesMap, undefined, 2));
+        console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
 
         //process each change array
-        let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap,deleteChangesMap,chunkElement.newLines - chunkElement.oldLines));
+        let promises = chunkElement.changes.map(eachChangeWithParams(chunkElement.newLines - chunkElement.oldLines));
         await Promise.all(promises);
 
-        console.log('add:'+JSON.stringify(addChangesMap,undefined,2));
 
         //TODO:process patterns with add and delete changes.
     }
     catch (e) {
-        console.log(e.config.url);
+        console.log(e);
     }
 }
 
-function eachChangeWithParams(addChangesMap,deleteChangesMap,lineDiff) {
+function eachChangeWithParams(lineDiff) {
     return async function processEachChange(eachChange) {
 
         //check normal change or not
-        console.log('lineDiff:', lineDiff);
+        // console.log('lineDiff:', lineDiff);
         //If not normal, check the patterns
         //Promises.all needs to be used over here, else it will call one after the other.
 
