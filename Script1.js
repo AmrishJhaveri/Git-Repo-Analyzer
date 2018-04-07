@@ -1,4 +1,5 @@
 const fs = require('fs');
+const cj = require('./chinmayJS');
 var jsonFileElements = fs.readFileSync('diff.json');
 //console.log(JSON.parse(contents)[0].chunks);
 
@@ -40,3 +41,6 @@ JSON.parse(jsonFileElements).forEach(function(jsonFileElement){ //loop for repo
 
 	console.log("\n");
 });
+
+if(cj.checkReplaceParameter("mockSettings.name(field.getName());\r","mockSettings.name(name);\r"))
+	console.log("found parameter change");
