@@ -159,7 +159,8 @@ async function processEachChunk(chunkElement) {
         }, {});
         console.log('add:' + JSON.stringify(addChangesMap, undefined, 2));
         console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
-
+        chunkElement['addMap']=JSON.stringify(addChangesMap, undefined, 2);
+        chunkElement['delMap']=JSON.stringify(deleteChangesMap, undefined, 2);
         //process each change array
         let promises = chunkElement.changes.map(eachChangeWithParams(chunkElement.newLines - chunkElement.oldLines));
         await Promise.all(promises);
