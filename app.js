@@ -6,6 +6,7 @@ const parse = require('parse-diff');
 //const utf8 = require('utf8')
 
 const reqData = require('./RequiredData');
+const AnalyzerObj=require('./AnalyzerObj');
 
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
@@ -80,9 +81,10 @@ async function getOnlyPullRequests(data_owner, data_name) {
     try {
         let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
         console.log('No. of pull requests:' + resultant_pull_requests.data.length + ' of repo:' + data_name);
+        
         const promises = resultant_pull_requests.data.map(processEachPull);
-
         await Promise.all(promises);
+
         console.log('After each diff captured for the repo');
         return resultant_pull_requests;
     }
@@ -151,7 +153,7 @@ async function processEachChunk(chunkElement) {
             }
             return map;
         }, {});
-        
+
         chunkElement['addMap'] = JSON.stringify(addChangesMap, undefined, 2);
         chunkElement['delMap'] = JSON.stringify(deleteChangesMap, undefined, 2);
 
@@ -168,11 +170,11 @@ async function processEachChunk(chunkElement) {
 function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
     return async function processEachChange(eachChange) {
 
-        console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
+        // console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
         //check normal change or not
         if (!eachChange.normal) {
             // console.log('lineDiff:', lineDiff);
-
+            pattermAddImport(eachChange);
             //If not normal, check the patterns
             //Promises.all needs to be used over here, else it will call one after the other.
 
@@ -183,6 +185,15 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
             //TODO:process patterns with add and delete changes.
             //iterate over all add changes while comparing with del changes and vice versa.
         }
+    }
+}
+
+async function pattermAddImport(content) {
+    let toBeMatched = '[+][ ]*import '
+    let patternRegex = new RegExp(toBeMatched);
+
+    if (patternRegex.test(content)) {
+        console.log(content + ': ' + patternRegex.test(content))
     }
 }
 
