@@ -1,8 +1,8 @@
 var method = AnalyzerObj.prototype;
 
-function AnalyzerObj(id, file) {
+function AnalyzerObj(id) {
     this._id = id;
-    this._file = file;
+    this._file = undefined;
     this._change = [];
 }
 

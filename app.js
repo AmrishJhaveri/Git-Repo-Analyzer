@@ -7,6 +7,8 @@ const parse = require('parse-diff');
 const reqData = require('./RequiredData');
 const pattern = require('./Pattern');
 
+let finalJSONResult = [];
+
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
     type: 'token',
@@ -23,7 +25,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 1;
+    let per_page_number = 5;
 
     return params = {
         q: q_param,
@@ -54,7 +56,8 @@ async function getAllPullRequests(repoDetails) {
     await Promise.all(promises);
 
     console.log('After iterating all the elements');
-    fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
+    // fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
+    fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(finalJSONResult, undefined, 2));
     console.timeEnd('getAllPullRequests');
 }
 
@@ -153,8 +156,8 @@ async function processEachChunk(chunkElement) {
             return map;
         }, {});
 
-        chunkElement['addMap'] = JSON.stringify(addChangesMap, undefined, 2);
-        chunkElement['delMap'] = JSON.stringify(deleteChangesMap, undefined, 2);
+        chunkElement['addMap'] = addChangesMap;
+        chunkElement['delMap'] = deleteChangesMap;
 
         //process each change array
         let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines));
@@ -173,11 +176,11 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
         if (!eachChange.normal) {
             // console.log('lineDiff:', lineDiff);
             // patternAddImport(eachChange);
-            pattern.patternAddImport(eachChange);
-            pattern.patternRemoveImport(eachChange);
+
+            addToFinalJSON(await pattern.patternAddImport(eachChange));
+            addToFinalJSON(await pattern.patternRemoveImport(eachChange));
             //If not normal, check the patterns
             //Promises.all needs to be used over here, else it will call one after the other.
-
             //check one change at a time
 
 
@@ -188,14 +191,11 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
     }
 }
 
-// async function patternAddImport(content) {
-//     let toBeMatched = '[+][ ]*import '
-//     let patternRegex = new RegExp(toBeMatched);
-
-//     if (patternRegex.test(content)) {
-//         console.log(content + ': ' + patternRegex.test(content))
-//     }
-// }
+function addToFinalJSON(result){
+    if(result){
+        finalJSONResult.push(result);
+    }
+}
 
 allRepoData();
 console.log('Repo data collection in progress');
