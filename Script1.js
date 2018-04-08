@@ -10,6 +10,8 @@ JSON.parse(jsonFileElements).forEach(function(jsonFileElement){ //loop for repo
 	chunks.forEach(function(chunk){ //loop for file
 		var changes = chunk.changes;
 		//console.log(changes);
+		var lineDiff = chunk.newLines - chunk.oldLines;
+		console.log("Line difference: "+lineDiff);
 
 		changes.forEach(function(change){
 

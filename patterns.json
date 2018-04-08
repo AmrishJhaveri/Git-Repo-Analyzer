@@ -15,6 +15,6 @@
 	},
 	{
 		"id"		: "parameter change",
-		"rgex"		: "[\(\)]"
+		"rgex"		: "[()]"
 	}
 ]
