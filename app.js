@@ -3,10 +3,9 @@ const fs = require('fs');
 const _ = require('lodash');
 const axios = require('axios');
 const parse = require('parse-diff');
-//const utf8 = require('utf8')
 
 const reqData = require('./RequiredData');
-const AnalyzerObj=require('./AnalyzerObj');
+const pattern = require('./Pattern');
 
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
@@ -81,7 +80,7 @@ async function getOnlyPullRequests(data_owner, data_name) {
     try {
         let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
         console.log('No. of pull requests:' + resultant_pull_requests.data.length + ' of repo:' + data_name);
-        
+
         const promises = resultant_pull_requests.data.map(processEachPull);
         await Promise.all(promises);
 
@@ -160,7 +159,6 @@ async function processEachChunk(chunkElement) {
         //process each change array
         let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines));
         await Promise.all(promises);
-
     }
     catch (e) {
         console.log(e);
@@ -174,7 +172,9 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
         //check normal change or not
         if (!eachChange.normal) {
             // console.log('lineDiff:', lineDiff);
-            pattermAddImport(eachChange);
+            // patternAddImport(eachChange);
+            pattern.patternAddImport(eachChange);
+            pattern.patternRemoveImport(eachChange);
             //If not normal, check the patterns
             //Promises.all needs to be used over here, else it will call one after the other.
 
@@ -188,14 +188,14 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
     }
 }
 
-async function pattermAddImport(content) {
-    let toBeMatched = '[+][ ]*import '
-    let patternRegex = new RegExp(toBeMatched);
+// async function patternAddImport(content) {
+//     let toBeMatched = '[+][ ]*import '
+//     let patternRegex = new RegExp(toBeMatched);
 
-    if (patternRegex.test(content)) {
-        console.log(content + ': ' + patternRegex.test(content))
-    }
-}
+//     if (patternRegex.test(content)) {
+//         console.log(content + ': ' + patternRegex.test(content))
+//     }
+// }
 
 allRepoData();
 console.log('Repo data collection in progress');

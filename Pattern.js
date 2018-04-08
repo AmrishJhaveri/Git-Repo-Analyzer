@@ -10,21 +10,26 @@ var PATTERN_ID = {
     REMOVE_IMPORT: 'REMOVE_IMPORT'
 }
 
-async function pattermAddImport(change) {
+async function patternAddImport(change) {
     let patternRegex = new RegExp(CONSTANTS.ADD_IMPORT);
+
+    //TODO: extract the name of the class from the import
     patternRegex.test(change.content) ? getAnalyzerObj(change) : undefined;
 }
 
-async function pattermRemoveImport(change) {
+async function patternRemoveImport(change) {
     let patternRegex = new RegExp(CONSTANTS.REMOVE_IMPORT);
+
+    //TODO: extract the name of the class from the import    
     patternRegex.test(change.content) ? getAnalyzerObj(change) : undefined;
 }
 
 function getAnalyzerObj(change){
-    let reultObj= new AnalyzerObj();
+    let resultObj= new AnalyzerObj();
+    console.log(change);
 }
 
-module.exports.Pattern = {
-    pattermAddImport,
-    pattermRemoveImport
+module.exports = {
+    patternAddImport,
+    patternRemoveImport
 }
