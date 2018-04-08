@@ -10,22 +10,22 @@ var PATTERN_ID = {
     REMOVE_IMPORT: 'REMOVE_IMPORT'
 }
 
-async function patternAddImport(change) {
+async function patternAddImport(change, fileName) {
     let patternRegex = new RegExp(CONSTANTS.ADD_IMPORT);
 
     //TODO: extract the name of the class from the import
-    return patternRegex.test(change.content) ? getAnalyzerObj(change,PATTERN_ID.ADD_IMPORT) : undefined;
+    return patternRegex.test(change.content) ? getAnalyzerObj(change,PATTERN_ID.ADD_IMPORT, fileName) : undefined;
 }
 
-async function patternRemoveImport(change) {
+async function patternRemoveImport(change, fileName) {
     let patternRegex = new RegExp(CONSTANTS.REMOVE_IMPORT);
 
     //TODO: extract the name of the class from the import    
-   return patternRegex.test(change.content) ? getAnalyzerObj(change, PATTERN_ID.REMOVE_IMPORT) : undefined;
+   return patternRegex.test(change.content) ? getAnalyzerObj(change, PATTERN_ID.REMOVE_IMPORT, fileName) : undefined;
 }
 
-async function getAnalyzerObj(change, id){
-    let resultObj= new AnalyzerObj(id);
+async function getAnalyzerObj(change, id, fileName){
+    let resultObj= new AnalyzerObj(id, fileName);
     resultObj.addConstruct(change);
     // console.log(resultObj);
     return resultObj;
@@ -33,5 +33,6 @@ async function getAnalyzerObj(change, id){
 
 module.exports = {
     patternAddImport,
-    patternRemoveImport
+    patternRemoveImport,
+    PATTERN_ID
 }

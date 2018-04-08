@@ -7,6 +7,7 @@ const parse = require('parse-diff');
 const reqData = require('./RequiredData');
 const pattern = require('./Pattern');
 
+// let finalJSONResultMap = new Map();
 let finalJSONResult = [];
 
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
@@ -25,7 +26,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 5;
+    let per_page_number = 1;
 
     return params = {
         q: q_param,
@@ -57,7 +58,7 @@ async function getAllPullRequests(repoDetails) {
 
     console.log('After iterating all the elements');
     // fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
-    fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(finalJSONResult, undefined, 2));
+    fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(await processFinalJSON(finalJSONResult), undefined, 2));
     console.timeEnd('getAllPullRequests');
 }
 
@@ -91,7 +92,7 @@ async function getOnlyPullRequests(data_owner, data_name) {
         return resultant_pull_requests;
     }
     catch (e) {
-        console.log(e.config.url);
+        console.log(e);
     }
 }
 
@@ -121,7 +122,7 @@ async function processEachPull(eachPR) {
         console.log('after parsing the data');
     }
     catch (e) {
-        console.error(e.config.url);
+        console.error(e);
     }
     return eachPR;
 }
@@ -132,35 +133,7 @@ async function processEachFile(fileElement) {
         //TODO:check fileElement for the extension of the file (.java)
 
         //process array of chunks in each file
-        let promises = fileElement.chunks.map(processEachChunk)
-        await Promise.all(promises);
-    }
-    catch (e) {
-        console.log(e.config.url);
-    }
-}
-
-async function processEachChunk(chunkElement) {
-    try {
-        //FIXME: remove maps and use filter for add and delete    
-        var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
-            if (ele.add) {
-                changeMap[ele.ln] = ele.content;
-            }
-            return changeMap;
-        }, {});
-        var deleteChangesMap = chunkElement.changes.reduce((map, ele) => {
-            if (ele.del) {
-                map[ele.ln] = ele.content;
-            }
-            return map;
-        }, {});
-
-        chunkElement['addMap'] = addChangesMap;
-        chunkElement['delMap'] = deleteChangesMap;
-
-        //process each change array
-        let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines));
+        let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from));
         await Promise.all(promises);
     }
     catch (e) {
@@ -168,18 +141,48 @@ async function processEachChunk(chunkElement) {
     }
 }
 
-function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
+function eachChunkWithParams(fileName) {
+    return async function processEachChunk(chunkElement) {
+        try {
+            //populating the add and delete changes map
+            var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
+                if (ele.add) {
+                    changeMap[ele.ln] = ele.content;
+                }
+                return changeMap;
+            }, {});
+            var deleteChangesMap = chunkElement.changes.reduce((map, ele) => {
+                if (ele.del) {
+                    map[ele.ln] = ele.content;
+                }
+                return map;
+            }, {});
+
+            chunkElement['addMap'] = addChangesMap;
+            chunkElement['delMap'] = deleteChangesMap;
+
+            //process each change array
+            let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName));
+            await Promise.all(promises);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName) {
     return async function processEachChange(eachChange) {
 
-        // console.log('del:' + JSON.stringify(deleteChangesMap, undefined, 2));
         //check normal change or not
         if (!eachChange.normal) {
-            // console.log('lineDiff:', lineDiff);
-            // patternAddImport(eachChange);
 
-            addToFinalJSON(await pattern.patternAddImport(eachChange));
-            addToFinalJSON(await pattern.patternRemoveImport(eachChange));
-            //If not normal, check the patterns
+            //Check for import added pattern                
+            addToFinalJSON(await pattern.patternAddImport(eachChange, fileName));
+
+            //check for import removed pattern
+            addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName));
+
             //Promises.all needs to be used over here, else it will call one after the other.
             //check one change at a time
 
@@ -191,9 +194,29 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff) {
     }
 }
 
-function addToFinalJSON(result){
-    if(result){
+function addToFinalJSON(result) {
+    if (result) {
         finalJSONResult.push(result);
+    }
+}
+
+async function processFinalJSON(finalJSONarray) {
+    try {
+        // let finalResultMap=new Map();
+        return resultMap = finalJSONarray.reduce((finalResultMap, element) => {
+            // console.log(element);
+            let arrayOfChanges = finalResultMap[element.id];
+            if (arrayOfChanges) {
+                arrayOfChanges.push(element);
+                finalResultMap[element.id] = arrayOfChanges;
+            } else {
+                finalResultMap[element.id] = [element];
+            }
+
+            return finalResultMap;
+        }, {});
+    } catch (e) {
+        console.log(e);
     }
 }
 

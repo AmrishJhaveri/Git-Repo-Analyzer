@@ -1,13 +1,13 @@
 var method = AnalyzerObj.prototype;
 
-function AnalyzerObj(id) {
-    this._id = id;
-    this._file = undefined;
-    this._change = [];
+function AnalyzerObj(id, fileName) {
+    this.id = id;
+    this.file = fileName;
+    this.change = [];
 }
 
-method.setFile = function (fileName) { this._file = fileName };
+method.setFile = function (fileName) { this.file = fileName };
 
-method.addConstruct = function (constructObj) { this._change.push(constructObj) };
+method.addConstruct = function (constructObj) { this.change.push(constructObj) };
 
 module.exports = AnalyzerObj;
