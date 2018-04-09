@@ -1,8 +1,8 @@
 const AnalyzerObj=require('./AnalyzerObj');
 
 var CONSTANTS = {
-    ADD_IMPORT: '[+][ ]*import ',
-    REMOVE_IMPORT: '[-][ ]*import '
+    ADD_IMPORT: /[+][ ]*import /g,
+    REMOVE_IMPORT: /[-][ ]*import /g
 }
 
 var PATTERN_ID = {
@@ -26,7 +26,13 @@ async function patternRemoveImport(change, fileName) {
 
 async function getAnalyzerObj(change, id, fileName){
     let resultObj= new AnalyzerObj(id, fileName);
-    resultObj.addConstruct(change);
+
+    let newChange={
+        ln:change.ln,
+        content:change.content
+    }
+
+    resultObj.addConstruct(newChange);
     // console.log(resultObj);
     return resultObj;
 }

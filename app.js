@@ -7,7 +7,6 @@ const parse = require('parse-diff');
 const reqData = require('./RequiredData');
 const pattern = require('./Pattern');
 
-// let finalJSONResultMap = new Map();
 let finalJSONResult = [];
 
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
@@ -22,7 +21,6 @@ var CONSTANTS = {
 };
 
 var getParams = (page_no) => {
-
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
@@ -197,6 +195,10 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
 function addToFinalJSON(result) {
     if (result) {
+        // let obj = {
+        //     ln: result.ln,
+        //     content: result.content
+        // }
         finalJSONResult.push(result);
     }
 }
