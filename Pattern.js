@@ -29,12 +29,24 @@ async function getAnalyzerObj(change, id, fileName) {
 
     let newChange = {
         ln: change.ln,
-        content: change.content
+        content: change.content,
+        findImpactFor: await getImpactValue(change.content, id)
     }
 
     resultObj.addConstruct(newChange);
     // console.log(resultObj);
     return resultObj;
+}
+
+async function getImpactValue(content, patternId) {
+    let resultString;
+    switch (patternId) {
+        case PATTERN_ID.ADD_IMPORT:
+        case PATTERN_ID.REMOVE_IMPORT:
+            resultString = content.substring(content.lastIndexOf('.') + 1);
+            break;
+    }
+    return resultString;
 }
 
 module.exports = {
