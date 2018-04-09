@@ -195,10 +195,6 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
 function addToFinalJSON(result) {
     if (result) {
-        // let obj = {
-        //     ln: result.ln,
-        //     content: result.content
-        // }
         finalJSONResult.push(result);
     }
 }
