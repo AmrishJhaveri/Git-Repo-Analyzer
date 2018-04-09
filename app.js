@@ -97,7 +97,6 @@ async function getOnlyPullRequests(data_owner, data_name) {
 }
 
 async function processEachPull(eachPR) {
-
     try {
 
         let reqURL = [axios.get(eachPR.issue_url + "?access_token=" + accessToken), axios.get(eachPR.diff_url, { responseType: 'text' })];
@@ -131,7 +130,9 @@ async function processEachFile(fileElement) {
     try {
 
         //TODO:check fileElement for the extension of the file (.java)
-
+        if (fileElement.from.indexOf('.java') === -1) {
+            return;
+        }
         //process array of chunks in each file
         let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from));
         await Promise.all(promises);
@@ -205,14 +206,21 @@ async function processFinalJSON(finalJSONarray) {
         // let finalResultMap=new Map();
         return resultMap = finalJSONarray.reduce((finalResultMap, element) => {
             // console.log(element);
-            let arrayOfChanges = finalResultMap[element.id];
-            if (arrayOfChanges) {
-                arrayOfChanges.push(element);
-                finalResultMap[element.id] = arrayOfChanges;
+            let patternId = element.id;
+            element.id = undefined;
+            let changesForPattern = finalResultMap[patternId];
+            if (changesForPattern) {
+                changesForPattern.matches.push(element);
+                finalResultMap[patternId] = {
+                    frequency: changesForPattern.frequency + 1,
+                    matches: changesForPattern.matches
+                };
             } else {
-                finalResultMap[element.id] = [element];
+                finalResultMap[patternId] = {
+                    frequency: 1,
+                    matches: [element]
+                };
             }
-
             return finalResultMap;
         }, {});
     } catch (e) {
