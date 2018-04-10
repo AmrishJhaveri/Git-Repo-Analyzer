@@ -104,16 +104,18 @@ async function processEachPull(eachPR) {
         console.log('Before parsing:' + eachPR.url);
         // remove the following data from the pull requests
         eachPR['head'] = undefined;
-        eachPR['repo'] = undefined;
         eachPR['base'] = undefined;
+        eachPR['user'] = undefined;
+        eachPR['_links'] = undefined;
+        
 
         // getting the JSON after parsing the diff file
         let diff_data = parse(response.data);
-        eachPR['diff_data'] = diff_data;
-        eachPR['issue_data'] = response_issue.data;
+        // eachPR['diff_data'] = diff_data;
+        // eachPR['issue_data'] = response_issue.data;
 
         //filtering : removing the objects with NORMAL type
-        let promises = diff_data.map(processEachFile);
+        let promises = diff_data.map(eachFileWithParams(eachPR));
         await Promise.all(promises);
 
         console.log('after parsing the data');
@@ -124,25 +126,27 @@ async function processEachPull(eachPR) {
     return eachPR;
 }
 
-async function processEachFile(fileElement) {
-    try {
-
-        //TODO:check fileElement for the extension of the file (.java)
-        if (fileElement.from.indexOf('.java') === -1) {
-            return;
+function eachFileWithParams(pullRequest) {
+    return async function processEachFile(fileElement) {
+        try {
+            //TODO:check fileElement for the extension of the file (.java)
+            if (fileElement.from.indexOf('.java') === -1) {
+                return;
+            }
+            //process array of chunks in each file
+            let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from, pullRequest));
+            await Promise.all(promises);
         }
-        //process array of chunks in each file
-        let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from));
-        await Promise.all(promises);
-    }
-    catch (e) {
-        console.log(e);
+        catch (e) {
+            console.log(e);
+        }
     }
 }
 
-function eachChunkWithParams(fileName) {
+function eachChunkWithParams(fileName, pullRequest) {
     return async function processEachChunk(chunkElement) {
         try {
+
             //populating the add and delete changes map
             var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
                 if (ele.add) {
@@ -161,7 +165,7 @@ function eachChunkWithParams(fileName) {
             chunkElement['delMap'] = deleteChangesMap;
 
             //process each change array
-            let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName));
+            let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName, pullRequest));
             await Promise.all(promises);
         }
         catch (e) {
@@ -170,17 +174,17 @@ function eachChunkWithParams(fileName) {
     }
 }
 
-function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName) {
+function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName, pullRequest) {
     return async function processEachChange(eachChange) {
 
         //check normal change or not
         if (!eachChange.normal) {
 
             //Check for import added pattern                
-            addToFinalJSON(await pattern.patternAddImport(eachChange, fileName));
+            addToFinalJSON(await pattern.patternAddImport(eachChange, fileName), pullRequest);
 
             //check for import removed pattern
-            addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName));
+            addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName), pullRequest);
 
             //Promises.all needs to be used over here, else it will call one after the other.
             //check one change at a time
@@ -193,8 +197,10 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
     }
 }
 
-function addToFinalJSON(result) {
+function addToFinalJSON(result, pullRequest) {
+    // console.log(JSON.stringify(pullRequest));
     if (result) {
+        result['pull_request'] = pullRequest;
         finalJSONResult.push(result);
     }
 }
