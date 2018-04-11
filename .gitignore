@@ -1,3 +1,7 @@
 node_modules/
 requiredData.json
 RequiredData_bk.json
+output.svg
+playground/UML.js
+playground/file.png
+playground/output-file.png

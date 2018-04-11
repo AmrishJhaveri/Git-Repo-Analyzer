@@ -3,6 +3,8 @@ const fs = require('fs');
 const _ = require('lodash');
 const axios = require('axios');
 const parse = require('parse-diff');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const reqData = require('./RequiredData');
 const pattern = require('./Pattern');
@@ -26,7 +28,7 @@ var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 5;
+    let per_page_number = 3;
 
     return params = {
         q: q_param,
@@ -61,6 +63,10 @@ async function getAllPullRequests(repoDetails) {
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(await processFinalJSON(finalJSONResult), undefined, 2));
     fs.writeFileSync(CONSTANTS.REPO_DATA_JSON, JSON.stringify(repoMap, undefined, 2))
     console.timeEnd('getAllPullRequests');
+    console.time('cloneRepos');
+    await cloneRepos();
+    console.timeEnd('cloneRepos');
+
 }
 
 async function getAndConvertData(element, index) {
@@ -243,5 +249,20 @@ async function processFinalJSON(finalJSONarray) {
     }
 }
 
+async function cloneRepos() {
+    try {
+        
+        for (var property in repoMap) {
+            const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
+        }
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
 allRepoData();
 console.log('Repo data collection in progress');
+

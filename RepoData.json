@@ -16,17 +16,5 @@
     "name": "fresco",
     "owner": "facebook",
     "url": "https://github.com/facebook/fresco"
-  },
-  "afollestad/material-dialogs": {
-    "id": 26102180,
-    "name": "material-dialogs",
-    "owner": "afollestad",
-    "url": "https://github.com/afollestad/material-dialogs"
-  },
-  "lgvalle/Material-Animations": {
-    "id": 31865176,
-    "name": "Material-Animations",
-    "owner": "lgvalle",
-    "url": "https://github.com/lgvalle/Material-Animations"
   }
 }
