@@ -8,6 +8,7 @@ const reqData = require('./RequiredData');
 const pattern = require('./Pattern');
 
 let finalJSONResult = [];
+let repoMap = {};
 
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
 octokit.authenticate({
@@ -17,14 +18,15 @@ octokit.authenticate({
 
 var CONSTANTS = {
     //REPOS_DATA_FILE: './GitAnalyzer/searchData.json',
-    REQUIRED_DATA_JSON: './RequiredData.json'
+    REQUIRED_DATA_JSON: './RequiredData.json',
+    REPO_DATA_JSON: './RepoData.json'
 };
 
 var getParams = (page_no) => {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 1;
+    let per_page_number = 5;
 
     return params = {
         q: q_param,
@@ -57,6 +59,7 @@ async function getAllPullRequests(repoDetails) {
     console.log('After iterating all the elements');
     // fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(await processFinalJSON(finalJSONResult), undefined, 2));
+    fs.writeFileSync(CONSTANTS.REPO_DATA_JSON, JSON.stringify(repoMap, undefined, 2))
     console.timeEnd('getAllPullRequests');
 }
 
@@ -71,6 +74,12 @@ async function getAndConvertData(element, index) {
         created_at: element.created_at,
         has_issues: element.has_issues
     };
+    repoMap[element.full_name] = {
+        id: element.id,
+        name: element.name,
+        owner: element.owner.login,
+        url: element.html_url
+    }
 
     let resultant_data = await getOnlyPullRequests(data.owner, data.name);
     data['pull_requests'] = resultant_data.data;
@@ -97,15 +106,23 @@ async function getOnlyPullRequests(data_owner, data_name) {
 async function processEachPull(eachPR) {
     try {
 
-        let reqURL = [axios.get(eachPR.issue_url + "?access_token=" + accessToken), axios.get(eachPR.diff_url, { responseType: 'text' })];
-
+        let reqURL = [
+            axios.get(eachPR.issue_url + "?access_token=" + accessToken),
+            axios.get(eachPR.diff_url, { responseType: 'text' }),
+            //axios.get(_.replace(eachPR.statuses_url, 'statuses', 'git/trees') + "?access_token=" + accessToken)
+        ];
+        // const result = await octokit.gitdata.getTree({ owner: eachPR.head.repo.owner.login, repo: eachPR.head.repo.name, sha: eachPR.head.sha, recursive: true });
         const [response_issue, response] = await Promise.all(reqURL);
 
-        console.log('Before parsing:' + eachPR.url);
+        // console.log("Tree:" + JSON.stringify(result, undefined, 2));
+        // console.log('Before parsing:' + eachPR.url);
         // remove the following data from the pull requests
         eachPR['head'] = undefined;
         eachPR['repo'] = undefined;
         eachPR['base'] = undefined;
+
+        eachPR['user'] = undefined;
+        eachPR['_links'] = undefined;
 
         // getting the JSON after parsing the diff file
         let diff_data = parse(response.data);
