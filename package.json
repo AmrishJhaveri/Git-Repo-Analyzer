@@ -4,7 +4,8 @@
   "description": "Git code commit analyzer",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./tests/appTest.js",
+	"start": "node index.js"
   },
   "keywords": [
     "git",
@@ -16,6 +17,6 @@
     "@octokit/rest": "^15.2.5",
     "axios": "^0.18.0",
     "fs": "0.0.1-security",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.5"
 	}
 }
