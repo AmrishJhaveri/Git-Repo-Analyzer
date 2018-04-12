@@ -24,11 +24,11 @@ var CONSTANTS = {
     REPO_DATA_JSON: './RepoData.json'
 };
 
-var getParams = (page_no) => {
+function getParams(page_no) {
     let q_param = "language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 3;
+    let per_page_number = 1;
 
     return params = {
         q: q_param,
@@ -251,7 +251,7 @@ async function processFinalJSON(finalJSONarray) {
 
 async function cloneRepos() {
     try {
-        
+
         for (var property in repoMap) {
             const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
             console.log('stdout:', stdout);
@@ -266,3 +266,17 @@ async function cloneRepos() {
 allRepoData();
 console.log('Repo data collection in progress');
 
+module.exports={
+    getParams,
+    cloneRepos,
+    processFinalJSON,
+    addToFinalJSON,
+    eachChangeWithParams,
+    eachChunkWithParams,
+    processEachFile,
+    processEachPull,
+    getOnlyPullRequests,
+    getAndConvertData,
+    getAllPullRequests,
+    allRepoData      
+}
