@@ -1,5 +1,5 @@
 const assert = require('assert');
-const app = require('./../app');
+const app = require('./../app/index');
 
 describe("test this", function () {
 

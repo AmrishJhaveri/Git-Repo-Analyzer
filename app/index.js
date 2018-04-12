@@ -254,8 +254,8 @@ async function cloneRepos() {
 
         for (var property in repoMap) {
             const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
-            console.log('stdout:', stdout);
-            console.log('stderr:', stderr);
+            // console.log('stdout:', stdout);
+            console.log('Repo:', stderr);
         }
     }
     catch (e) {
@@ -263,7 +263,7 @@ async function cloneRepos() {
     }
 }
 
-allRepoData();
+// allRepoData();
 console.log('Repo data collection in progress');
 
 module.exports={
