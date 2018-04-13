@@ -1,32 +1,32 @@
 {
-  "mockito/mockito": {
-    "id": 6207167,
-    "name": "mockito",
-    "owner": "mockito",
-    "url": "https://github.com/mockito/mockito"
+  "iluwatar/java-design-patterns": {
+    "id": 22790488,
+    "name": "java-design-patterns",
+    "owner": "iluwatar",
+    "url": "https://github.com/iluwatar/java-design-patterns"
   },
-  "ravidsrk/android-testing-guide": {
-    "id": 67680403,
-    "name": "android-testing-guide",
-    "owner": "ravidsrk",
-    "url": "https://github.com/ravidsrk/android-testing-guide"
+  "kdn251/interviews": {
+    "id": 81975372,
+    "name": "interviews",
+    "owner": "kdn251",
+    "url": "https://github.com/kdn251/interviews"
   },
-  "yale8848/RetrofitCache": {
-    "id": 94198016,
-    "name": "RetrofitCache",
-    "owner": "yale8848",
-    "url": "https://github.com/yale8848/RetrofitCache"
+  "facebook/fresco": {
+    "id": 31533997,
+    "name": "fresco",
+    "owner": "facebook",
+    "url": "https://github.com/facebook/fresco"
   },
-  "mkotsur/restito": {
-    "id": 6116698,
-    "name": "restito",
-    "owner": "mkotsur",
-    "url": "https://github.com/mkotsur/restito"
+  "afollestad/material-dialogs": {
+    "id": 26102180,
+    "name": "material-dialogs",
+    "owner": "afollestad",
+    "url": "https://github.com/afollestad/material-dialogs"
   },
-  "mtedone/podam": {
-    "id": 1687351,
-    "name": "podam",
-    "owner": "mtedone",
-    "url": "https://github.com/mtedone/podam"
+  "lgvalle/Material-Animations": {
+    "id": 31865176,
+    "name": "Material-Animations",
+    "owner": "lgvalle",
+    "url": "https://github.com/lgvalle/Material-Animations"
   }
 }

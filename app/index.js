@@ -25,8 +25,8 @@ var CONSTANTS = {
 };
 
 function getParams(page_no) {
-    // let q_param = "language:java license:mit";
-    let q_param = "mock language:java license:mit";
+    let q_param = "language:java license:mit";
+    // let q_param = "mock language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
     let per_page_number = 5;

@@ -3,7 +3,7 @@ const AnalyzerObj = require('./AnalyzerObj');
 var CONSTANTS = {
     ADD_IMPORT: /[+][ ]*import /g,
     REMOVE_IMPORT: /[-][ ]*import /g,
-    CHANGE_PARAMETERS: /[\(\)]/g
+    // CHANGE_PARAMETERS: /[\(\)]/g
 }
 
 var PATTERN_ID = {
@@ -54,7 +54,7 @@ async function getAnalyzerObj(change, id, fileName, change2) {
 
     let newChange = {
         ln: change.ln,
-        content: change.content,
+        content1: change.content,
         content2: change2 ? change2.content : undefined,
         findImpactFor: await getImpactValue(change.content, id)
     }
