@@ -1,34 +1,71 @@
+// NPM module for GitHub Api
 const octokit = require('@octokit/rest')();
+
+// NPM module(Node internal) for file reading & writing operations
 const fs = require('fs');
+
+// NPM module for easy to use utility functions of String, Array
 const _ = require('lodash');
+
+// NPM module for HTTP request
 const axios = require('axios');
+
+// NPM module for parsing the diff file of pull request and provide it in a eaasy to use form
 const parse = require('parse-diff');
+
+// NPM module(Node internal) for promise utility use with old JS functions
 const util = require('util');
+
+// NPM module(Node internal) for creating child process for executing shell commands.
 const exec = util.promisify(require('child_process').exec);
 
+// RequiredData.js file providing a array with add,set,get methods. 
+//Used to store the required data in JS object form.
 const reqData = require('./RequiredData');
+
+// Pattern.js which is responsible of detecting patterns and providing the output in the required JS object form.
 const pattern = require('./Pattern');
 
+// All valid pattern matches found are stored in JS object form in this array.
 let finalJSONResult = [];
+
+// Info about the repositories for which the pull requests are used is stored in this object. 
+// This is later used to clone the repos.
 let repoMap = {};
 
+// Github Personal Access Token. Only Read access to public repos is provided with this token.
 const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
+// Token setup for Octokit to increase the read limit to 5000 requests every hour.
 octokit.authenticate({
     type: 'token',
     token: accessToken
 })
 
+/**
+ *  Constants for the file names.
+ *  RepoData.json contains the repository details for analyzed pull requests.
+ *  RequiredData.json contains the output of the analyzer with details of the patterns found and there occurences.
+ */
 var CONSTANTS = {
-    //REPOS_DATA_FILE: './GitAnalyzer/searchData.json',
     REQUIRED_DATA_JSON: './RequiredData.json',
     REPO_DATA_JSON: './RepoData.json'
 };
 
+/**
+ * This generates the JS object with the search parameters(q), sorting parameter(sort), 
+ * ordering of result(order), page number of result(page), and no of requests per page(per_page).
+ * This object is the input for octokit.search.repos.
+ * @param {*} page_no page number of the search query to be considered for finding the repos
+ */
 function getParams(page_no) {
+    // Search Java language projects with MIT license
     let q_param = "language:java license:mit";
     // let q_param = "mock language:java license:mit";
+    // Sort by the stars of the Github project
     let sort_param = 'stars';
+    // Order in descending order
     let order_param = 'desc';
+    // Get 5 projects from this page
     let per_page_number = 5;
 
     return params = {
@@ -40,11 +77,20 @@ function getParams(page_no) {
     }
 };
 
-// Get the repositories meta data. Store it into a JSON file
-async function allRepoData() {
+/**
+ * Async function to fetch the repo data based on the input provided by getParams().
+ * Uses octokit.search.repos to fetch the required repositories.
+ * Await is used to wait till the repo result is available. 
+ * Once available then only fetch the pull requests of each repo.
+ */
+async function getRepoData() {
     try {
+        // Make a HTTP call to fetch the Repo details using Octokit Git Api. 
+        //Wait till the data is available.
         const result_data = await octokit.search.repos(getParams(1));
-        console.log('after get repo data');
+        console.log('after getRepoData()');
+        
+        //Once all the data is received, get the pull request data for each repo using pulls_url attribute.
         getAllPullRequests(result_data);
     }
     catch (e) {
@@ -120,16 +166,6 @@ async function processEachPull(eachPR) {
         ];
         // const result = await octokit.gitdata.getTree({ owner: eachPR.head.repo.owner.login, repo: eachPR.head.repo.name, sha: eachPR.head.sha, recursive: true });
         const [response_issue, response] = await Promise.all(reqURL);
-
-        // console.log("Tree:" + JSON.stringify(result, undefined, 2));
-        // console.log('Before parsing:' + eachPR.url);
-        // remove the following data from the pull requests
-        // eachPR['head'] = undefined;
-        // eachPR['repo'] = undefined;
-        // eachPR['base'] = undefined;
-
-        // eachPR['user'] = undefined;
-        // eachPR['_links'] = undefined;
 
         // getting the JSON after parsing the diff file
         let diff_data = parse(response.data);
@@ -324,5 +360,5 @@ module.exports = {
     getOnlyPullRequests,
     getAndConvertData,
     getAllPullRequests,
-    allRepoData
+    getRepoData
 }
