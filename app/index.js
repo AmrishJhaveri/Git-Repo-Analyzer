@@ -124,17 +124,17 @@ async function processEachPull(eachPR) {
         // console.log("Tree:" + JSON.stringify(result, undefined, 2));
         // console.log('Before parsing:' + eachPR.url);
         // remove the following data from the pull requests
-        eachPR['head'] = undefined;
-        eachPR['repo'] = undefined;
-        eachPR['base'] = undefined;
+        // eachPR['head'] = undefined;
+        // eachPR['repo'] = undefined;
+        // eachPR['base'] = undefined;
 
-        eachPR['user'] = undefined;
-        eachPR['_links'] = undefined;
+        // eachPR['user'] = undefined;
+        // eachPR['_links'] = undefined;
 
         // getting the JSON after parsing the diff file
         let diff_data = parse(response.data);
         // eachPR['diff_data'] = diff_data;
-        // eachPR['issue_data'] = response_issue.data;
+        eachPR['issue_data'] = response_issue.data;
 
         //filtering : removing the objects with NORMAL type
         let promises = diff_data.map(eachFileWithParams(eachPR));
@@ -213,11 +213,11 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
 
             //check add-del pair together
-            if (eachChange.add && deleteChangesMap[eachChange.ln+lineDiff]) {
-                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln-lineDiff], fileName),pullRequest);
+            if (eachChange.add && deleteChangesMap[eachChange.ln + lineDiff]) {
+                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln - lineDiff], fileName), pullRequest);
             }
-            else if(eachChange.del && addChangesMap[eachChange.ln+lineDiff]) {
-                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln-lineDiff], fileName),pullRequest);
+            else if (eachChange.del && addChangesMap[eachChange.ln + lineDiff]) {
+                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln - lineDiff], fileName), pullRequest);
             }
         }
     }
@@ -225,9 +225,47 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
 function addToFinalJSON(result, pullRequest) {
     if (result) {
-        result['pull_request'] = pullRequest;
+        result['pull_request'] = removeFieldsFromPullRequest(pullRequest);
         finalJSONResult.push(result);
     }
+}
+
+function removeFieldsFromPullRequest(eachPR) {
+    eachPR['head'] = undefined;
+    eachPR['repo'] = undefined;
+    eachPR['base'] = undefined;
+    eachPR['user'] = undefined;
+    eachPR['_links'] = undefined;
+
+    eachPR['locked'] = undefined;
+    eachPR['requested_reviewers'] = undefined;
+    eachPR['requested_teams'] = undefined;
+    eachPR['milestone'] = undefined;
+    eachPR['commits_url'] = undefined;
+    eachPR['statuses_url'] = undefined;
+    eachPR['comments_url'] = undefined;
+    eachPR['review_comment_url'] = undefined;
+    eachPR['review_comments_url'] = undefined;
+    eachPR['author_association'] = undefined;
+    eachPR['assignee'] = undefined;
+    eachPR['assignees'] = undefined;
+    eachPR['merge_commit_sha'] = undefined;
+
+    eachPR['issue_data']['labels_url'] = undefined;
+    eachPR['issue_data']['events_url'] = undefined;
+    eachPR['issue_data']['html_url'] = undefined;
+    eachPR['issue_data']['id'] = undefined;
+    eachPR['issue_data']['pull_request'] = undefined;
+    eachPR['issue_data']['author_association'] = undefined;
+    eachPR['issue_data']['milestone'] = undefined;
+    eachPR['issue_data']['assignee'] = undefined;
+    eachPR['issue_data']['assignees'] = undefined;
+    eachPR['issue_data']['closed_by'] = undefined;
+    // eachPR['issue_data']['user'] = undefined;
+
+
+    return eachPR;
+    // eachPR['issue_data']=
 }
 
 async function processFinalJSON(finalJSONarray) {
