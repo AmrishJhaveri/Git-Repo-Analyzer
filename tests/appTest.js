@@ -1,5 +1,9 @@
 const assert = require('assert');
 const app = require('./../app/index');
+// var Jasmine = require('jasmine');
+
+const pattern = require('./../app/Pattern');
+
 
 describe("test this", function () {
 
@@ -33,5 +37,14 @@ describe("test this", function () {
         assert.deepStrictEqual(actualResult, expectedResult);
     });
 
-    
+    it("async function tests",function(done){
+        
+        spyOn(pattern,'patternAddImport').and.returnValue({t:'d'});
+        addChangesMap={}, deleteChangesMap={}, lineDiff=4, fileName='test.java'
+        console.log('hi');
+        var result= app.eachChangeWithParams(addChangesMap,deleteChangesMap,lineDiff,fileName);
+        console.log(result);
+        done();
+
+    });
 })

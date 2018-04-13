@@ -64,7 +64,7 @@ async function getAllPullRequests(repoDetails) {
     fs.writeFileSync(CONSTANTS.REPO_DATA_JSON, JSON.stringify(repoMap, undefined, 2))
     console.timeEnd('getAllPullRequests');
     console.time('cloneRepos');
-    await cloneRepos();
+    // await cloneRepos();
     console.timeEnd('cloneRepos');
 
 }
@@ -132,11 +132,11 @@ async function processEachPull(eachPR) {
 
         // getting the JSON after parsing the diff file
         let diff_data = parse(response.data);
-        eachPR['diff_data'] = diff_data;
-        eachPR['issue_data'] = response_issue.data;
+        // eachPR['diff_data'] = diff_data;
+        // eachPR['issue_data'] = response_issue.data;
 
         //filtering : removing the objects with NORMAL type
-        let promises = diff_data.map(processEachFile);
+        let promises = diff_data.map(eachFileWithParams(eachPR));
         await Promise.all(promises);
 
         console.log('after parsing the data');
@@ -147,23 +147,25 @@ async function processEachPull(eachPR) {
     return eachPR;
 }
 
-async function processEachFile(fileElement) {
-    try {
+function eachFileWithParams(pullRequest) {
+    return async function processEachFile(fileElement) {
+        try {
 
-        //TODO:check fileElement for the extension of the file (.java)
-        if (fileElement.from.indexOf('.java') === -1) {
-            return;
+            //TODO:check fileElement for the extension of the file (.java)
+            if (fileElement.from.indexOf('.java') === -1) {
+                return;
+            }
+            //process array of chunks in each file
+            let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from,pullRequest));
+            await Promise.all(promises);
         }
-        //process array of chunks in each file
-        let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from));
-        await Promise.all(promises);
-    }
-    catch (e) {
-        console.log(e);
+        catch (e) {
+            console.log(e);
+        }
     }
 }
 
-function eachChunkWithParams(fileName) {
+function eachChunkWithParams(fileName, pullRequest) {
     return async function processEachChunk(chunkElement) {
         try {
             //populating the add and delete changes map
@@ -184,7 +186,7 @@ function eachChunkWithParams(fileName) {
             chunkElement['delMap'] = deleteChangesMap;
 
             //process each change array
-            let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName));
+            let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName, pullRequest));
             await Promise.all(promises);
         }
         catch (e) {
@@ -193,17 +195,17 @@ function eachChunkWithParams(fileName) {
     }
 }
 
-function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName) {
+function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName, pullRequest) {
     return async function processEachChange(eachChange) {
 
         //check normal change or not
         if (!eachChange.normal) {
 
-            //Check for import added pattern                
-            addToFinalJSON(await pattern.patternAddImport(eachChange, fileName));
+            //Check for import added pattern        
+            addToFinalJSON(await pattern.patternAddImport(eachChange, fileName), pullRequest);
 
             //check for import removed pattern
-            addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName));
+            addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName), pullRequest);
 
             //Promises.all needs to be used over here, else it will call one after the other.
             //check one change at a time
@@ -216,8 +218,9 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
     }
 }
 
-function addToFinalJSON(result) {
+function addToFinalJSON(result, pullRequest) {
     if (result) {
+        result['pull_request'] = pullRequest;
         finalJSONResult.push(result);
     }
 }
@@ -266,17 +269,17 @@ async function cloneRepos() {
 // allRepoData();
 console.log('Repo data collection in progress');
 
-module.exports={
+module.exports = {
     getParams,
     cloneRepos,
     processFinalJSON,
     addToFinalJSON,
     eachChangeWithParams,
     eachChunkWithParams,
-    processEachFile,
+    eachFileWithParams,
     processEachPull,
     getOnlyPullRequests,
     getAndConvertData,
     getAllPullRequests,
-    allRepoData      
+    allRepoData
 }
