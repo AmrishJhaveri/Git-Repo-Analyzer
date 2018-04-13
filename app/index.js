@@ -25,10 +25,11 @@ var CONSTANTS = {
 };
 
 function getParams(page_no) {
-    let q_param = "language:java license:mit";
+    // let q_param = "language:java license:mit";
+    let q_param = "mock language:java license:mit";
     let sort_param = 'stars';
     let order_param = 'desc';
-    let per_page_number = 1;
+    let per_page_number = 5;
 
     return params = {
         q: q_param,
@@ -139,7 +140,7 @@ async function processEachPull(eachPR) {
         let promises = diff_data.map(eachFileWithParams(eachPR));
         await Promise.all(promises);
 
-        console.log('after parsing the data');
+        // console.log('after parsing the data');
     }
     catch (e) {
         console.error(e);
@@ -156,7 +157,7 @@ function eachFileWithParams(pullRequest) {
                 return;
             }
             //process array of chunks in each file
-            let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from,pullRequest));
+            let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from, pullRequest));
             await Promise.all(promises);
         }
         catch (e) {
@@ -171,13 +172,13 @@ function eachChunkWithParams(fileName, pullRequest) {
             //populating the add and delete changes map
             var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
                 if (ele.add) {
-                    changeMap[ele.ln] = ele.content;
+                    changeMap[ele.ln] = ele;
                 }
                 return changeMap;
             }, {});
             var deleteChangesMap = chunkElement.changes.reduce((map, ele) => {
                 if (ele.del) {
-                    map[ele.ln] = ele.content;
+                    map[ele.ln] = ele;
                 }
                 return map;
             }, {});
@@ -213,7 +214,14 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
             //check add-del pair together
             //TODO:process patterns with add and delete changes.
-            //iterate over all add changes while comparing with del changes and vice versa.
+            if (eachChange.add && deleteChangesMap[eachChange.ln+lineDiff]) {
+                // console.log(lineDiff+"eachChange:"+eachChange.content);
+                // console.log(lineDiff+"deleteChangesMap:"+deleteChangesMap[eachChange.ln-lineDiff]);
+                pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln-lineDiff], fileName);
+            }
+            else if(eachChange.del && addChangesMap[eachChange.ln+lineDiff]) {
+                pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln-lineDiff], fileName);
+            }
         }
     }
 }
