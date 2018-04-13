@@ -29,39 +29,33 @@ async function patternRemoveImport(change, fileName) {
 async function patternChangedMethodParameters(change1, change2, fileName) {
 
     if (!change2 || !change2.content) {
-        return
+        return;
     }
-    // console.log( typeof change2.content);
-    let arr1 = change1.content.split(CONSTANTS.CHANGE_PARAMETERS);
-    let arr2 = change2.content.split(CONSTANTS.CHANGE_PARAMETERS);
 
-    return checkMethodParametersChanged(arr1, arr2) ? getAnalyzerObj(change1, PATTERN_ID.CHANGE_PARAMETERS, fileName) : undefined;
+    return checkMethodParametersChanged(change1.content, change2.content) ? getAnalyzerObj(change1, PATTERN_ID.CHANGE_PARAMETERS, fileName, change2) : undefined;
 }
 
-async function checkMethodParametersChanged(arr1, arr2) {
-    // console.log("arr1:" + JSON.stringify(arr1, undefined, 2));
-    // console.log("arr2:" + JSON.stringify(arr2, undefined, 2));
-    if (arr1[0] != arr2[0])
-        return false;
+function checkMethodParametersChanged(change1, change2) {
+    let name1 = change1.substring(change1.indexOf(" "), change1.indexOf("("));
+    let name2 = change2.substring(change2.indexOf(" "), change2.indexOf("("));
+    if (name1 === name2 && name1 !== '') {
 
-    if (arr1[1] !== arr2[1]) {
-        console.log("arr1:" + JSON.stringify(arr1, undefined, 2));
-        console.log("arr2:" + JSON.stringify(arr2, undefined, 2));
-        return true;
+        if (change1.substring(change1.indexOf("(") + 1, change1.indexOf(")")) !== change2.substring(change2.indexOf("(") + 1, change2.indexOf(")"))) {
+            console.log("name1:" + JSON.stringify(change1, undefined, 2));
+            console.log("name2:" + JSON.stringify(change2, undefined, 2));
+            return true;
+        }
     }
     return false;
-    // if (arr1.every(function (u, i) { return u === arr2[i]; }))
-    //     return true
-    // else
-    //     return false
 }
 
-async function getAnalyzerObj(change, id, fileName) {
+async function getAnalyzerObj(change, id, fileName, change2) {
     let resultObj = new AnalyzerObj(id, fileName);
 
     let newChange = {
         ln: change.ln,
         content: change.content,
+        content2: change2 ? change2.content : undefined,
         findImpactFor: await getImpactValue(change.content, id)
     }
 

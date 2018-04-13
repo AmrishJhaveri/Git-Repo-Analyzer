@@ -1,8 +1,32 @@
 {
-  "iluwatar/java-design-patterns": {
-    "id": 22790488,
-    "name": "java-design-patterns",
-    "owner": "iluwatar",
-    "url": "https://github.com/iluwatar/java-design-patterns"
+  "mockito/mockito": {
+    "id": 6207167,
+    "name": "mockito",
+    "owner": "mockito",
+    "url": "https://github.com/mockito/mockito"
+  },
+  "ravidsrk/android-testing-guide": {
+    "id": 67680403,
+    "name": "android-testing-guide",
+    "owner": "ravidsrk",
+    "url": "https://github.com/ravidsrk/android-testing-guide"
+  },
+  "yale8848/RetrofitCache": {
+    "id": 94198016,
+    "name": "RetrofitCache",
+    "owner": "yale8848",
+    "url": "https://github.com/yale8848/RetrofitCache"
+  },
+  "mkotsur/restito": {
+    "id": 6116698,
+    "name": "restito",
+    "owner": "mkotsur",
+    "url": "https://github.com/mkotsur/restito"
+  },
+  "mtedone/podam": {
+    "id": 1687351,
+    "name": "podam",
+    "owner": "mtedone",
+    "url": "https://github.com/mtedone/podam"
   }
 }

@@ -213,14 +213,11 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
 
 
             //check add-del pair together
-            //TODO:process patterns with add and delete changes.
             if (eachChange.add && deleteChangesMap[eachChange.ln+lineDiff]) {
-                // console.log(lineDiff+"eachChange:"+eachChange.content);
-                // console.log(lineDiff+"deleteChangesMap:"+deleteChangesMap[eachChange.ln-lineDiff]);
-                pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln-lineDiff], fileName);
+                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln-lineDiff], fileName),pullRequest);
             }
             else if(eachChange.del && addChangesMap[eachChange.ln+lineDiff]) {
-                pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln-lineDiff], fileName);
+                addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln-lineDiff], fileName),pullRequest);
             }
         }
     }
