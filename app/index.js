@@ -177,7 +177,7 @@ async function getAllPullRequests(data_owner, data_name) {
 
         //process each pull request and call the function processEachPull
         const promises = resultant_pull_requests.data.map(processEachPull);
-        
+
         //wait till all promises are fulfilled.
         await Promise.all(promises);
 
@@ -191,46 +191,60 @@ async function getAllPullRequests(data_owner, data_name) {
 
 /**
  * This function gets the issue data and diff file from the urls present in the pull request object.
+ * 
  * Using the parse function of the parse-diff npm module, the diff data is converted into a suitable JSON format.
  * For a particular pull request, multiple files could be committed. 
  * For each file multiple sections could be present in the diff file.
  * So parse-diff module produces a array of objects for each file.
  * Each such object has an array 'chunks' for different sections in a file.
- * Each chunk has properties like, old start(starting line for the section in the old file), 
- *      old lines(number of lines in the section in the old file),
- *      new start(starting line for the section in the new file), 
- *      new lines(number of lines in the section in the new file)
+ * Each chunk has properties like: 
+ **      old start(starting line for the section in the old file), 
+ **      old lines(number of lines in the section in the old file),
+ **      new start(starting line for the section in the new file), 
+ **      new lines(number of lines in the section in the new file).
+ *
+ * Iterate over each file generate by the parse-diff for the diff of that pull request.
  * 
  * @param {*} eachPR a single pull request of a repo
  */
 async function processEachPull(eachPR) {
     try {
 
+        //Using the Axios NPM module to make HTTP requests for fetching the issue and the content of the diff file for the particular pull request.
+        //Access token needs to be appended at the end of the issue url for increasing the request limit of Github API to 5000.
+        //Promise is produced by axios.get()
         let reqURL = [
             axios.get(eachPR.issue_url + "?access_token=" + accessToken),
             axios.get(eachPR.diff_url, { responseType: 'text' }),
-            //axios.get(_.replace(eachPR.statuses_url, 'statuses', 'git/trees') + "?access_token=" + accessToken)
         ];
-        // const result = await octokit.gitdata.getTree({ owner: eachPR.head.repo.owner.login, repo: eachPR.head.repo.name, sha: eachPR.head.sha, recursive: true });
-        const [response_issue, response] = await Promise.all(reqURL);
+
+        //Wait till both the above promises are fulfilled.
+        //Store the responses in a array format, so they are mapped properly.
+        //The order in the reqURL is maintained when the promises are resolved.
+        const [response_issue, response_diff] = await Promise.all(reqURL);
 
         // getting the JSON after parsing the diff file
-        let diff_data = parse(response.data);
-        // eachPR['diff_data'] = diff_data;
+        // See the method description to get more details.
+        let diff_data = parse(response_diff.data);
+
+        //retrieve data field from response_issue and assign it to 'issue_data'
         eachPR['issue_data'] = response_issue.data;
 
-        //filtering : removing the objects with NORMAL type
+        //Iterate over diff_data array and call eachFileWithParams passing pull request as a parameter.
+        //Returns a array of promises.
         let promises = diff_data.map(eachFileWithParams(eachPR));
+        //wait till all the promises are resolved.
         await Promise.all(promises);
-
-        // console.log('after parsing the data');
     }
     catch (e) {
         console.error(e);
     }
-    return eachPR;
 }
 
+/**
+ * 
+ * @param {*} pullRequest 
+ */
 function eachFileWithParams(pullRequest) {
     return async function processEachFile(fileElement) {
         try {
