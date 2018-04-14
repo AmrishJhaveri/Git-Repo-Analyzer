@@ -1,3 +1,5 @@
+**Note:**	Please view this file in a web browser.
+
 # Git-Repo-Analyzer
 
 Git-Repo-Analyzer automatically obtains fixes to the source code that developers performed to address bug/issue reports for software applications on Github.
@@ -24,35 +26,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 There are 2 ways to install this:
 
-- **Automatically by script provided**
-
-
-	1. Download entire project zip of `Amrish_Jhaveri_Chinmay_Gangal_hw1_CS540` and extract all contents
-	2. If my-jenkins_home.tgz is not present inside `DockerImages/Jenkins/` then only download the file from this location : [Jenkins_home](https://drive.google.com/file/d/1yi8tRf4TkfdWijsg37Au_vhKKN0MFfud/view?usp=sharing) and place it in `DockerImages\Jenkins` inside the above extracted project.
-	3.	In Docker terminal, go to the path of the parent directory of the above extracted structure.
-	4. Run the setup file using the command: 
-		
-		```
-		./install_script.sh
-		``` 
-	
-	This should get everything setup automatically in a few minutes.   
-
-	If there is an existing gitlab image `gitlab/gitlab:9.1.0-ce.0`, this would expedite the setup. Otherwise the setup file would download it directly.
-
-
-- **Manually**
-
-	Refer to the [Installation_Config.md](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw1_cs540/src/master/Installation_Config.md?at=master&fileviewer=file-view-default) file for detailed steps regarding manual installation
-
-To verify installation, do the following:
-
-- In Docker terminal, type `docker-machine ip` to know the IP address of your Docker virtual machine. This is your <docker-ip>
-- Go to your browser, and access the url in this format: `<docker-ip>:9080`, then use credentias provided below to login. This should lead you to the Jenkins homepage, where you would see 1 job created: "Git\_to\_Gitlab"
-
-	![Jenkins_Home](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw1_CS540/raw/master/images/sr_1.JPG)
-
-- Also open another url in this format: `<docker-ip>:30080`. This should lead you to the Gitlab homepage. Login with credentials specified below
 
 ### Credentials
 
