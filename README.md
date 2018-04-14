@@ -15,8 +15,8 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 
 ### Prerequisites
 
-- Node.js v9.9.0
-- Python v3.6.1
+- Node `v9.9.0`
+- Python `v3.6.1`
 - Must have registered email address with Understand license key
 
 ### Installing
@@ -25,10 +25,14 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 	`node -v` and `npm -v`
 2. Run `npm install` from the directory where `package.json` is present.
 This will install the required modules present in `package.json` into the project directory inside `node_modules` directory.
-3. Run `npm start` will start the application and fetch the repo details.
 
-
-
+### Starting the Application
+1. Run `npm start` will start the application and fetch the repository details and clone the repositories in the project directory. This will generate 2 JSON files.
+	File Name|Purpose
+	--|--
+	RequiredData.json|xyz
+	RepoData.json|abc
+2. Run the python script which will read the `RequiredData.json`.
 
 ### Credentials
 
