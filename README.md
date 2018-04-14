@@ -42,8 +42,12 @@ RepoData.json|JSON file which contains the Github repository details. This file 
 ## Output
 
 ----------
-
-
+The output present in RequiredData.json will have the following structure :
+Attribute Name|Attribute of|Data Type|Purpose
+--|--|--|--
+PATTER_ID|None|JavaScript object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGED_PARAMETERS`
+frequency|PATTER_ID|JavaScript Number|This provides the number of occurrences of the pattern with PATTER_ID for the given number of repositories which were analyzed.
+matches|PATTER_ID|JavaScript Array|This array has all the data about the change which matched a particular pattern.
 
 ## Simple Happy Flow
 
