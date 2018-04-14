@@ -49,18 +49,17 @@ function checkMethodParametersChanged(change1, change2) {
     return false;
 }
 
-async function getAnalyzerObj(change, id, fileName, change2) {
+async function getAnalyzerObj(change1, id, fileName, change2) {
     let resultObj = new AnalyzerObj(id, fileName);
 
     let newChange = {
-        ln: change.ln,
-        content1: change.content,
+        ln: change1.ln,
+        content1: change1.content,
         content2: change2 ? change2.content : undefined,
-        findImpactFor: await getImpactValue(change.content, id)
+        findImpactFor: await getImpactValue(change1.content, id)
     }
 
     resultObj.addConstruct(newChange);
-    // console.log(resultObj);
     return resultObj;
 }
 
@@ -69,8 +68,12 @@ async function getImpactValue(content, patternId) {
     switch (patternId) {
         case PATTERN_ID.ADD_IMPORT:
         case PATTERN_ID.REMOVE_IMPORT:
-            resultString = content.substring(content.lastIndexOf('.') + 1);
+            resultString = content.substring(content.lastIndexOf('.') + 1, content.lastIndexOf(';'));
             break;
+        case PATTERN_ID.CHANGE_PARAMETERS:
+            resultString = content.substring(content.indexOf(' '), content.indexOf('('));
+            break;
+
     }
     return resultString;
 }
