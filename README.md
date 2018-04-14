@@ -46,9 +46,14 @@ The output present in RequiredData.json will have the following structure :
 
 Attribute Name|Attribute of|Data Type|Purpose
 --|--|--|--
-PATTER_ID|None|JavaScript object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGED_PARAMETERS`
-frequency|PATTER_ID|JavaScript Number|This provides the number of occurrences of the pattern with PATTER_ID for the given number of repositories which were analyzed.
-matches|PATTER_ID|JavaScript Array|This array has all the data about the change which matched a particular pattern.
+PATTERN_ID|None|JSON Object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGED_PARAMETERS`
+frequency|`PATTERN_ID`|JSON Number|This provides the number of occurrences of the pattern with PATTERN_ID for the given number of repositories which were analyzed.
+matches|`PATTERN_ID`|JSON Array|This array has all the data about the change which matched a particular pattern.
+file|each element of `matches`|JSON String|This gives the file name in which the change can be found.
+change|each element of `matches`|JSON Object|Provides details like line number, content1, content2(in case of replacement) and entity for which impact needs to be found.
+ln|`change`|JSON Number|This provides the line number in the `file` at which this change is present
+content1|`change`|JSON String|Provides the content of the change under consideration.
+
 
 ## Simple Happy Flow
 
