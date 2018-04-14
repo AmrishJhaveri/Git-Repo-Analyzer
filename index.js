@@ -1,3 +1,3 @@
 const app=require('./app/index.js');
 
-app.allRepoData();
+app.getRepoData();

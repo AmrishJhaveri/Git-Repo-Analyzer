@@ -4,29 +4,5 @@
     "name": "java-design-patterns",
     "owner": "iluwatar",
     "url": "https://github.com/iluwatar/java-design-patterns"
-  },
-  "kdn251/interviews": {
-    "id": 81975372,
-    "name": "interviews",
-    "owner": "kdn251",
-    "url": "https://github.com/kdn251/interviews"
-  },
-  "facebook/fresco": {
-    "id": 31533997,
-    "name": "fresco",
-    "owner": "facebook",
-    "url": "https://github.com/facebook/fresco"
-  },
-  "afollestad/material-dialogs": {
-    "id": 26102180,
-    "name": "material-dialogs",
-    "owner": "afollestad",
-    "url": "https://github.com/afollestad/material-dialogs"
-  },
-  "lgvalle/Material-Animations": {
-    "id": 31865176,
-    "name": "Material-Animations",
-    "owner": "lgvalle",
-    "url": "https://github.com/lgvalle/Material-Animations"
   }
 }

@@ -21,7 +21,7 @@ const exec = util.promisify(require('child_process').exec);
 
 // RequiredData.js file providing a array with add,set,get methods. 
 //Used to store the required data in JS object form.
-const reqData = require('./RequiredData');
+// const reqData = require('./RequiredData');
 
 // Pattern.js which is responsible of detecting patterns and providing the output in the required JS object form.
 const pattern = require('./Pattern');
@@ -34,7 +34,7 @@ let finalJSONResult = [];
 let repoMap = {};
 
 // Github Personal Access Token. Only Read access to public repos is provided with this token.
-const accessToken = 'f261168993b8ff10be45e863b036ac44040b678f';
+const accessToken = '76a1e4c56ede658b7bd1241ccfb51d6c5511f289';
 // Token setup for Octokit to increase the read limit to 5000 requests every hour.
 octokit.authenticate({
     type: 'token',
@@ -55,6 +55,7 @@ var CONSTANTS = {
  * This generates the JS object with the search parameters(q), sorting parameter(sort), 
  * ordering of result(order), page number of result(page), and no of requests per page(per_page).
  * This object is the input for octokit.search.repos.
+ * 
  * @param {*} page_no page number of the search query to be considered for finding the repos
  */
 function getParams(page_no) {
@@ -66,7 +67,7 @@ function getParams(page_no) {
     // Order in descending order
     let order_param = 'desc';
     // Get 5 projects from this page
-    let per_page_number = 5;
+    let per_page_number = 1;
 
     return params = {
         q: q_param,
@@ -81,52 +82,75 @@ function getParams(page_no) {
  * Async function to fetch the repo data based on the input provided by getParams().
  * Uses octokit.search.repos to fetch the required repositories.
  * Await is used to wait till the repo result is available. 
- * Once available then only fetch the pull requests of each repo.
+ * Once available then only fetch the pull requests data of each repo.
  */
 async function getRepoData() {
     try {
         // Make a HTTP call to fetch the Repo details using Octokit Git Api. 
-        //Wait till the data is available.
+        // Wait till the data is available.
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after getRepoData()');
         
+
         //Once all the data is received, get the pull request data for each repo using pulls_url attribute.
-        getAllPullRequests(result_data);
+        await getPullRequestsForRepos(result_data);
     }
     catch (e) {
         console.log(e);
     }
 }
 
-//iterate over the data and store the required info from each repo metadata.
-async function getAllPullRequests(repoDetails) {
-    console.time('getAllPullRequests');
-
-    const promises = repoDetails.data.items.map(getAndConvertData)
+/**
+ * Iterates over each repo , and calls the function getAndConvertData().
+ * Once all the promises are resolved, it process the finalJSONResult array to get the required analyzer output.
+ * Converts to string using JSON utility and writes synchronously into file RequiredData.json
+ * The console.time and console.timeEnd are used to calculate the time taken for the entire operation.
+ * repoMap is converted to string and written synchronously to RepoData.json
+ * Once data is written to file, we clone the repos found in repoMap.
+ * 
+ * @param {*} repoDetails Repo details obtained from getRepoData()
+ */
+async function getPullRequestsForRepos(repoDetails) {
+    //Start the timer for getAllPullRequests.
+    console.time('getPullRequestsForRepos');
+    // console.log('In getAllPullRequests'+JSON.stringify(repoDetails.data.items,undefined,2));
+    //Iterate over each repo data object and call the function getAndConvertData()
+    //Returns an array of promises
+    const promises = repoDetails.data.items.map(getAndConvertData);
+    //Wait till all promises are resolved.
     await Promise.all(promises);
 
     console.log('After iterating all the elements');
-    // fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(reqData.getData(), undefined, 2));
+
+    //Create required output format from finalJSONResult, convert to string(with indent of 2 spaces) and write synchronously to file RequiredData.json.
     fs.writeFileSync(CONSTANTS.REQUIRED_DATA_JSON, JSON.stringify(await processFinalJSON(finalJSONResult), undefined, 2));
+    //convert to string(with indent of 2 spaces) and write synchronously to file RepoData.json.
     fs.writeFileSync(CONSTANTS.REPO_DATA_JSON, JSON.stringify(repoMap, undefined, 2))
-    console.timeEnd('getAllPullRequests');
+
+    //End the timer for getAllPullRequests.
+    console.timeEnd('getPullRequestsForRepos');
+
+    //start the timer for cloneRepos
     console.time('cloneRepos');
+    // call the function which clones the repos in the repoMap. Wait till all the repos are cloned.
     // await cloneRepos();
+    //end the timer for cloneRepos
     console.timeEnd('cloneRepos');
 
 }
 
+/**
+ * This function is called for each repo object. The repo object and index(position) is passed to the function.
+ * We add the repo details to the repoMap.
+ * We need to fetch all(30 or max available pull requests) pull requests by calling getAllPullRequests function and passing owner name and repo name.
+ * Wait till all the promises from getAllPullRequests() get fulfilled.
+ * 
+ * @param {*} element metadata of one repo.
+ * @param {*} index position in the array of repo objects
+ */
 async function getAndConvertData(element, index) {
 
-    let data = {
-        id: element.id,
-        name: element.name,
-        owner: element.owner.login,
-        //issues_url: _.replace(element.issues_url, '{/number}', ''),
-        pulls_url: _.replace(element.pulls_url, '{/number}', ''),
-        created_at: element.created_at,
-        has_issues: element.has_issues
-    };
+    // add the repo detail to repoMap(global data structure) with details like id, repo name, owner name and url.
     repoMap[element.full_name] = {
         id: element.id,
         name: element.name,
@@ -134,13 +158,11 @@ async function getAndConvertData(element, index) {
         url: element.html_url
     }
 
-    let resultant_data = await getOnlyPullRequests(data.owner, data.name);
-    data['pull_requests'] = resultant_data.data;
-    reqData.addData(data)
+    await getAllPullRequests(element.owner.login, element.name);
     console.log('after pull request call:' + index);
 }
 
-async function getOnlyPullRequests(data_owner, data_name) {
+async function getAllPullRequests(data_owner, data_name) {
     try {
         let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
         console.log('No. of pull requests:' + resultant_pull_requests.data.length + ' of repo:' + data_name);
@@ -357,7 +379,7 @@ module.exports = {
     eachChunkWithParams,
     eachFileWithParams,
     processEachPull,
-    getOnlyPullRequests,
+    getPullRequestsForRepos,
     getAndConvertData,
     getAllPullRequests,
     getRepoData

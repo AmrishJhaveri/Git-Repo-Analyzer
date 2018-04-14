@@ -7,6 +7,7 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 ----------
 
 -  Multiple HTTP requests can be processed in parallel with Node.js non-blocking I/O model.
+-  New patterns can be added easily.
 
 ## Process Flow
 ----------
