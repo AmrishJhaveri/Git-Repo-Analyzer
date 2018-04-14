@@ -376,14 +376,31 @@ function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileNam
     }
 }
 
-function addToFinalJSON(result, pullRequest) {
-    if (result) {
-        result['pull_request'] = removeFieldsFromPullRequest(pullRequest);
-        finalJSONResult.push(result);
+/**
+ * This function adds the resultObj object to the finalJSONResult array.
+ * Also adds the pull request object after removing unwanted data(not requried in the output of analyzer) to the resultObj object.
+ * 
+ * @param {*} resultObj 
+ * @param {*} pullRequest 
+ */
+function addToFinalJSON(resultObj, pullRequest) {
+    //check if the resultObj is valid i.e not undefined
+    if (resultObj) {
+        // add pull request object after removing few fields from it.
+        resultObj['pull_request'] = removeFieldsFromPullRequest(pullRequest);
+        //add the object to the finalJSONResult.
+        finalJSONResult.push(resultObj);
     }
 }
 
+/**
+ * This function removes(makes the fields undefined) information of the pull reuqest which is not required in the analyzer's output.
+ * @param {*} eachPR pull request object in which the particular change was found.
+ */
 function removeFieldsFromPullRequest(eachPR) {
+
+    //Below fields are set to undefined so they are not available in the final output when the JS object is converted to a JSON string to save toa JSOn file.
+
     eachPR['head'] = undefined;
     eachPR['repo'] = undefined;
     eachPR['base'] = undefined;
@@ -418,22 +435,45 @@ function removeFieldsFromPullRequest(eachPR) {
     return eachPR;
 }
 
+/**
+ * 
+ * This function processes the finalJSONarray array and converts to a JS object(similar to a map).
+ * The key for this object is the PATTERN_ID i.e. ADD_IMPORT, REMOVE_IMPORT, CHANGE_PARAMETERS.
+ * The value is a JS object for each of this pattern.
+ *1.  Each such value object has a freuency field and a array for matches.
+ *2.  Each element in the matches array has a file name, change found matching the pattern, and the pull request in which the change was found on Github.
+ *3.  Each file name is a relative path inside the project(repo) including the name of the file.
+ *4.  Each change object has a line number where the change was found, content of the change, impact factor for few patterns.  
+ *
+ * This function returns a key, value object pairs.
+ *  
+ * @param {*} finalJSONarray an array with all the changes in the diff file which need to be a part of analyzer's output.
+ */
 async function processFinalJSON(finalJSONarray) {
     try {
-        // let finalResultMap=new Map();
+        //iterating over the array and accumulating the data in finalResultMap
         return resultMap = finalJSONarray.reduce((finalResultMap, element) => {
-            // console.log(element);
+            //copy the id of the element which will one of the following: ADD_IMPORT, REMOVE_IMPORT, CHANGE_PARAMETERS
             let patternId = element.id;
+            //remove the id field since it is redundant now inside the object. Please see the output JSON to understand this.
             element.id = undefined;
+            //get the object from the finalResultMap map.
             let changesForPattern = finalResultMap[patternId];
+            
+            //check if it is defined or undefined.
+            //If defined, it means there are previous values.
             if (changesForPattern) {
                 changesForPattern.matches.push(element);
                 finalResultMap[patternId] = {
+                    //increment the frequency, since we found 1 more change which mathces this pattern
                     frequency: changesForPattern.frequency + 1,
                     matches: changesForPattern.matches
                 };
-            } else {
+            }
+            //If undefined create a new object to match the required structure.
+            else {
                 finalResultMap[patternId] = {
+                    // this is a new pattern, so the frquency is set to 1
                     frequency: 1,
                     matches: [element]
                 };
@@ -445,9 +485,13 @@ async function processFinalJSON(finalJSONarray) {
     }
 }
 
+/**
+ * This function iterates over the repoMap which contains the rpeo details for which the pull reuqest were fetched.
+ * Using the Github repo url, we are cloning the repo.
+ * 
+ */
 async function cloneRepos() {
     try {
-
         for (var property in repoMap) {
             const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
             console.log('Repo:', stderr);
@@ -460,6 +504,7 @@ async function cloneRepos() {
 
 console.log('Repo data collection in progress');
 
+//make the below function available for use outside of this file.
 module.exports = {
     getParams,
     cloneRepos,
