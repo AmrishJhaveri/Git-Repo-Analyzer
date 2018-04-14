@@ -133,7 +133,7 @@ async function getPullRequestsForRepos(repoDetails) {
     //start the timer for cloneRepos
     console.time('cloneRepos');
     // call the function which clones the repos in the repoMap. Wait till all the repos are cloned.
-    // await cloneRepos();
+    await cloneRepos();
     //end the timer for cloneRepos
     console.timeEnd('cloneRepos');
 
@@ -228,6 +228,7 @@ async function processEachPull(eachPR) {
         let diff_data = parse(response_diff.data);
 
         //retrieve data field from response_issue and assign it to 'issue_data'
+        // So now the pull request object also has a issue_data field for the issue info of the pull request.
         eachPR['issue_data'] = response_issue.data;
 
         //Iterate over diff_data array and call eachFileWithParams passing pull request as a parameter.
@@ -242,6 +243,12 @@ async function processEachPull(eachPR) {
 }
 
 /**
+ * This function (eachFileWithParams()) acts a wrapper function around the async function processEachFile().
+ * The reason of creating this function was to pass the pull request object to each file/chunk/change found in the diff file.
+ * 
+ * This function is called from processEachPull() while iterating through diff_data array.
+ * 
+ * We consider .java files and iterate over each chunk found in those files, present in the diff file.
  * 
  * @param {*} pullRequest 
  */
@@ -249,12 +256,16 @@ function eachFileWithParams(pullRequest) {
     return async function processEachFile(fileElement) {
         try {
 
-            //TODO:check fileElement for the extension of the file (.java)
+            //check fileElement for the extension of the file (.java)
+            // This can be removed for considering all the files.
             if (fileElement.from.indexOf('.java') === -1) {
                 return;
             }
-            //process array of chunks in each file
+
+            //process the array of chunks in each file passing the file name and the pull request object.
+            //this is required so the final ouput has the file name and the pull data from which the change was extracted.
             let promises = fileElement.chunks.map(eachChunkWithParams(fileElement.from, pullRequest));
+            // Wait till all the above promises are fulfilled.
             await Promise.all(promises);
         }
         catch (e) {
@@ -263,16 +274,36 @@ function eachFileWithParams(pullRequest) {
     }
 }
 
+/**
+ * 
+ * This function eachChunkWithParams() is a wrapper function around processEachChunk().
+ * The reason of creating this function was to pass the file name and the pull request object to each chunk found in the diff file.
+ * 
+ * This function is called from eachFileWithParams() while iterating over each chunk present in the file.
+ * 
+ * @param {*} fileName name of the file in which the chunk is present.
+ * @param {*} pullRequest the pull request(object) from which the chunk is extracted.
+ */
 function eachChunkWithParams(fileName, pullRequest) {
     return async function processEachChunk(chunkElement) {
         try {
-            //populating the add and delete changes map
+            //This creates a object which has the line numbers and change object which was added.
+            //All lines with '+' sign in the chunk of the file in the diff will be part of this object.
+            //We used the reduce() of the JS array to process each change element, finding out if it is a add change. 
+            //If so, we add it to the changeMap object which is passed over each iteration.
+            //changeMap object is initialized to empty i.e. {}.
             var addChangesMap = chunkElement.changes.reduce((changeMap, ele) => {
                 if (ele.add) {
                     changeMap[ele.ln] = ele;
                 }
                 return changeMap;
             }, {});
+
+            //This creates a object which has the line numbers and change object which was deleted.
+            //All lines with '-' sign in the chunk of the file in the diff will be part of this object.
+            //We used the reduce() of the JS array to process each change element, finding out if it is a delete change. 
+            //If so, we add it to the map object which is passed over each iteration.
+            //map object is initialized to empty i.e. {}.
             var deleteChangesMap = chunkElement.changes.reduce((map, ele) => {
                 if (ele.del) {
                     map[ele.ln] = ele;
@@ -280,11 +311,12 @@ function eachChunkWithParams(fileName, pullRequest) {
                 return map;
             }, {});
 
-            chunkElement['addMap'] = addChangesMap;
-            chunkElement['delMap'] = deleteChangesMap;
-
-            //process each change array
+            //process changes array by calling eachChangeWithParams() over each element.
+            //We pass object addChangesMap and deleteChangesMap with line number as the property and change object as the value.
+            //We also pass the value of line diff between new lines and old lines i.e. chunkElement.newLines - chunkElement.oldLines
+            // And lastly we pass the file name and pull request object.
             let promises = chunkElement.changes.map(eachChangeWithParams(addChangesMap, deleteChangesMap, chunkElement.newLines - chunkElement.oldLines, fileName, pullRequest));
+            //Wait till all promises are fulfilled.
             await Promise.all(promises);
         }
         catch (e) {
