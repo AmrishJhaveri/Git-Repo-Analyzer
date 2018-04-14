@@ -2,13 +2,6 @@
 
 Git-Repo-Analyzer automatically obtains fixes to the source code that developers performed to address bug/issue reports for software applications on Github.
 
-## Salient Features
-
-----------
-
--  Multiple HTTP requests can be processed in parallel with Node.js non-blocking I/O model.
--  New patterns can be added easily.
-
 ## Process Flow
 ----------
 1. Query the GitHub API for getting the repository meta data based on search parameters. 

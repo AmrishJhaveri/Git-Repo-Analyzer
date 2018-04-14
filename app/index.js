@@ -325,26 +325,50 @@ function eachChunkWithParams(fileName, pullRequest) {
     }
 }
 
+/**
+ * This function(eachChangeWithParams()) is a wrapper function over async function processEachChange().
+ * The reason of creating this function is to pass parameters to each change found in the diff file.
+ * 
+ * This function is called from eachChunkWithParams() while iterating over chunkElement.changes
+ * 
+ * A change can be normal,add, deleted.
+ * We considere only add/delete changes(ignore the normal changes).
+ * Next we use the user-defined pattern module to check for each pattern:
+ * *    patternAddImport(): Checks if the import statement is added.
+ * *    patternRemoveImport(): Checks if the import statement is deleted.
+ * *    patternChangedMethodParameters(): Checks if the paramter(s) within the parenthesis are changed.
+ * 
+ * If a positive result then we add AnalyzerObj(returned by the pattern module) to finalJSONResult by calling addToFinalJSON().
+ * 
+ * @param {*} addChangesMap object with line no. as the key and the change object as the value. Only add(+) changes present. 
+ * @param {*} deleteChangesMap object with line no. as the key and the change object as the value. Only delete(-) changes present.
+ * @param {*} lineDiff the difference in lines from old file to the new file.
+ * @param {*} fileName name of the file in which the chunk is present.
+ * @param {*} pullRequest the pull request(object) from which the chunk is extracted.
+ */
 function eachChangeWithParams(addChangesMap, deleteChangesMap, lineDiff, fileName, pullRequest) {
     return async function processEachChange(eachChange) {
 
-        //check normal change or not
+        //Only consider add/delete changes. Ignore the normal changes.
         if (!eachChange.normal) {
 
-            //Check for import added pattern        
+            //Check for import added pattern and pass the result to addToFinalJSON().
+            //If it matches add import pattern then the result and pull reuqest object is added to the finalJSONResult.
             addToFinalJSON(await pattern.patternAddImport(eachChange, fileName), pullRequest);
 
-            //check for import removed pattern
+            //check for import removed pattern and pass the result to addToFinalJSON().
+            //If it matches remove import pattern then the result and pull reuqest object is added to the finalJSONResult.
             addToFinalJSON(await pattern.patternRemoveImport(eachChange, fileName), pullRequest);
 
-            //Promises.all needs to be used over here, else it will call one after the other.
-            //check one change at a time
-
-
-            //check add-del pair together
+            //check for add change and get the corresponding delete change from deleteChangesMap
+            //if delete change with the same line number is present then it will return a change object else undefined.
+            //line number is calculated by considering the lineDiff which is the difference between the lines in the old and the new file.
             if (eachChange.add && deleteChangesMap[eachChange.ln + lineDiff]) {
                 addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, deleteChangesMap[eachChange.ln - lineDiff], fileName), pullRequest);
             }
+            //check for add change and get the corresponding delete change from addChangesMap
+            //if add change with the same line number is present then it will return a change object else undefined.
+            //line number is calculated by considering the lineDiff which is the difference between the lines in the old and the new file.
             else if (eachChange.del && addChangesMap[eachChange.ln + lineDiff]) {
                 addToFinalJSON(await pattern.patternChangedMethodParameters(eachChange, addChangesMap[eachChange.ln - lineDiff], fileName), pullRequest);
             }
@@ -390,11 +414,8 @@ function removeFieldsFromPullRequest(eachPR) {
     eachPR['issue_data']['assignee'] = undefined;
     eachPR['issue_data']['assignees'] = undefined;
     eachPR['issue_data']['closed_by'] = undefined;
-    // eachPR['issue_data']['user'] = undefined;
-
 
     return eachPR;
-    // eachPR['issue_data']=
 }
 
 async function processFinalJSON(finalJSONarray) {
@@ -429,7 +450,6 @@ async function cloneRepos() {
 
         for (var property in repoMap) {
             const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
-            // console.log('stdout:', stdout);
             console.log('Repo:', stderr);
         }
     }
@@ -438,7 +458,6 @@ async function cloneRepos() {
     }
 }
 
-// allRepoData();
 console.log('Repo data collection in progress');
 
 module.exports = {
