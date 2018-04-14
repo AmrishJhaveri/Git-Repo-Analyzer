@@ -43,6 +43,7 @@ RepoData.json|JSON file which contains the Github repository details. This file 
 
 ----------
 The output present in RequiredData.json will have the following structure :
+
 Attribute Name|Attribute of|Data Type|Purpose
 --|--|--|--
 PATTER_ID|None|JavaScript object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGED_PARAMETERS`
