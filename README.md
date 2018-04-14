@@ -28,10 +28,13 @@ This will install the required modules present in `package.json` into the projec
 
 ### Starting the Application
 1. Run `npm start` will start the application and fetch the repository details and clone the repositories in the project directory. This will generate 2 JSON files.
-	File Name|Purpose
-	--|--
-	RequiredData.json|xyz
-	RepoData.json|abc
+
+File Name|Purpose
+--|--
+RequiredData.json|xyz
+RepoData.json|abc
+
+
 2. Run the python script which will read the `RequiredData.json`.
 
 ### Credentials
