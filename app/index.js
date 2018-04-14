@@ -90,7 +90,7 @@ async function getRepoData() {
         // Wait till the data is available.
         const result_data = await octokit.search.repos(getParams(1));
         console.log('after getRepoData()');
-        
+
 
         //Once all the data is received, get the pull request data for each repo using pulls_url attribute.
         await getPullRequestsForRepos(result_data);
@@ -158,26 +158,51 @@ async function getAndConvertData(element, index) {
         url: element.html_url
     }
 
+    //Wait till all pull requests are fetched with owner name and repo name.
     await getAllPullRequests(element.owner.login, element.name);
     console.log('after pull request call:' + index);
 }
 
+/**
+ * This function gets the first 30 closed pull requests for the given owner name and repo name.
+ * Waits till all the pull requests metadata is received and then process each pull request by calling function processEachPull().
+ * @param {*} data_owner owner name of the repo for which pull requests need to be fetched
+ * @param {*} data_name repo name
+ */
 async function getAllPullRequests(data_owner, data_name) {
     try {
+        //Fetch first 30(or less) pull requests for given owner name and repo name.
         let resultant_pull_requests = await octokit.pullRequests.getAll({ owner: data_owner, repo: data_name, state: 'closed' });
         console.log('No. of pull requests:' + resultant_pull_requests.data.length + ' of repo:' + data_name);
 
+        //process each pull request and call the function processEachPull
         const promises = resultant_pull_requests.data.map(processEachPull);
+        
+        //wait till all promises are fulfilled.
         await Promise.all(promises);
 
         console.log('After each diff captured for the repo');
-        return resultant_pull_requests;
+        // return resultant_pull_requests;
     }
     catch (e) {
         console.log(e);
     }
 }
 
+/**
+ * This function gets the issue data and diff file from the urls present in the pull request object.
+ * Using the parse function of the parse-diff npm module, the diff data is converted into a suitable JSON format.
+ * For a particular pull request, multiple files could be committed. 
+ * For each file multiple sections could be present in the diff file.
+ * So parse-diff module produces a array of objects for each file.
+ * Each such object has an array 'chunks' for different sections in a file.
+ * Each chunk has properties like, old start(starting line for the section in the old file), 
+ *      old lines(number of lines in the section in the old file),
+ *      new start(starting line for the section in the new file), 
+ *      new lines(number of lines in the section in the new file)
+ * 
+ * @param {*} eachPR a single pull request of a repo
+ */
 async function processEachPull(eachPR) {
     try {
 
