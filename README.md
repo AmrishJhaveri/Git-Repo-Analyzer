@@ -13,18 +13,21 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 
 ----------
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
-
 ### Prerequisites
 
-- System must have Docker installed
-- Docker must not have any running containers. Also there must be no stopped/exited containers with the name "jenkins" or "gitlab"
-- Github repository must be of "master" branch
+- Node.js v9.9.0
+- Python v3.6.1
 - Must have registered email address with Understand license key
 
 ### Installing
 
-There are 2 ways to install this:
+1. Make sure node and npm is installed on the system. To check run the following commands from command prompt or shell.
+	`node -v` and `npm -v`
+2. Run `npm install` from the directory where `package.json` is present.
+This will install the required modules present in `package.json` into the project directory inside `node_modules` directory.
+3. Run `npm start` will start the application and fetch the repo details.
+
+
 
 
 ### Credentials
@@ -96,12 +99,8 @@ For a sample run and the screenshots of the output, you can open the following l
 
 ----------
 
-* [Docker](https://www.docker.com/) - Serves as platform for various application containers
-* [Jenkins](https://jenkins.io/) - Server to automate building, testing and deploying software
-* [GitLab](https://about.gitlab.com/) - fully featured Git Server which can be installed on your system. 
-* [Understand](https://scitools.com/features/) - Tool for static code analysis
-* [Redis](https://redis.io/) - In-memory data structure support for database & cache
-* [JGit](https://www.eclipse.org/jgit/) - Java API for GIT commands
+* [Node](https://nodejs.org/en/) - Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.
+
 
 ## Authors
 

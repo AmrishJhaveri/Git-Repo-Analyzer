@@ -4,7 +4,7 @@
   "description": "Git code commit analyzer",
   "main": "app.js",
   "scripts": {
-    "test": "jasmine ./tests/appTest.js",
+    "test": "mocha ./tests/appTest.js",
     "start": "node index.js"
   },
   "keywords": [
@@ -18,8 +18,5 @@
     "axios": "^0.18.0",
     "fs": "0.0.1-security",
     "lodash": "^4.17.5"
-  },
-  "devDependencies": {
-    "jasmine": "^3.1.0"
   }
 }
