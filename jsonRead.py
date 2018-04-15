@@ -10,6 +10,8 @@ changeData = json.load(open('RequiredData.json'))
 matches = changeData["REMOVE_IMPORT"]["matches"]
 
 for match in matches:
+
+	#prepare arguments to be passed to understandscript
 	change = match["change"]
 	relPath = repoName + "/" + match['file']
 	fileName = relPath.split("/")[-1]
