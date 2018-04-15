@@ -105,6 +105,7 @@ Sample JSON output looks like this:
 
 * [Node](https://nodejs.org/en/) - Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient.
 * [Understand](https://scitools.com/static-analysis-tool/) -  Helps to quickly and easily understand and visualize complex code, perform impact analysis, and deliver powerful metrics.
+* [Octokit](https://github.com/octokit/rest.js) - GitHub REST API client for Node.js
 
 ## Authors
 
