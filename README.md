@@ -55,6 +55,45 @@ ln|`change`|JSON Number|This provides the line number in the `file` at which thi
 content1|`change`|JSON String|Provides the content of the change under consideration.
 content2|`change`|JSON String|Provides the content of the change with same line number as the one under consideration.It will be present in patterns which consider replacement. If content1 is with + i.e. the content is added, then content2 is with - i.e. content is deleted and vice versa.
 findImpactFor|`change`|JSON String | Provides the entity which can be used by Understand to find the impact of the change in the file.
+pull_request|each element of `matches`|JSON Object|Provides the data fetched from using Github API for the pull request of the repository. It also contains the issue data fetched for the particular pull request.
+
+Sample JSON output looks like this:
+
+	{
+		 "ADD_IMPORT": {
+		    "frequency": 1208,
+		    "matches": [
+		      {
+		        "file": "interpreter/src/test/java/com/iluwatar/interpreter/ExpressionTest.java",
+		        "change": {
+		          "ln": 26,
+		          "content1": "+import org.junit.jupiter.api.TestInstance;",
+		          "findImpactFor": "TestInstance"
+		        },
+		        "pull_request": {
+					...
+				}
+				...
+			]
+		}
+		"CHANGE_PARAMETERS": {
+	    	"frequency": 59,
+		    "matches": [
+		      {
+		        "file": "prototype/src/main/java/com/iluwatar/prototype/App.java",
+		        "change": {
+		          "ln": 55,
+		          "content1": "-    factory = new HeroFactoryImpl(new ElfMage(), new ElfWarlord(), new ElfBeast());",
+		          "content2": "+    factory = new HeroFactoryImpl(new ElfMage(\"cooking\"), new ElfWarlord(\"cleaning\"), new ElfBeast(\"protecting\"));",
+		          "findImpactFor": "    factory = new HeroFactoryImpl"
+		        },
+		        "pull_request": {
+					...
+				}
+				...
+			]
+		}
+	}	
 
 ## Simple Happy Flow
 
