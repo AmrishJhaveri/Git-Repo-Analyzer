@@ -98,10 +98,6 @@ Sample JSON output looks like this:
 		}
 	}	
 
-## Simple Happy Flow
-
-----------
-
 
 ## Built With
 
