@@ -4,7 +4,6 @@
   "description": "Git code commit analyzer",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./tests/appTest.js",
     "start": "node index.js"
   },
   "keywords": [
