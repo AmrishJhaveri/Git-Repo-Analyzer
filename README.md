@@ -30,7 +30,7 @@ File Name|Purpose
 RequiredData.json|JSON file which contains the output of the analyzer. The structure is explained later under Output section.
 RepoData.json|JSON file which contains the Github repository details. This file and its data is used for cloning the repositories.
 
--- Run the python script which will read the `RequiredData.json` and modify it to incorporate the impact for the code changes determined by SciTools Understand.
+- Run the python script which will read the `RequiredData.json` and modify it to incorporate the impact for the code changes determined by SciTools Understand.
 
 ## Process Flow
 ----------
