@@ -7,7 +7,7 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 ## Process Flow
 ----------
 
-![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/images/Process_Flow.PNG)
+![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/diagrams/Process_Flow.PNG)
  
 
 ## Getting Started
