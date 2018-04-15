@@ -31,8 +31,6 @@ RequiredData.json|JSON file which contains the output of the analyzer. The struc
 RepoData.json|JSON file which contains the Github repository details. This file and its data is used for cloning the repositories.
 
 
-- Run the python script which will read the `RequiredData.json` and modify it to incorporate the impact for the code changes determined by SciTools Understand.
-
 ## Process Flow
 ----------
 
@@ -45,7 +43,7 @@ The output present in RequiredData.json will have the following structure :
 
 Attribute Name|Attribute of|Data Type|Purpose
 --|--|--|--
-PATTERN_ID|None|JSON Object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGED_PARAMETERS`
+PATTERN_ID|None|JSON Object|This identifies the type of pattern which is under consideration which can be any of `ADD_IMPORT`, `REMOVE_IMPORT`, `CHANGE_PARAMETERS`
 frequency|`PATTERN_ID`|JSON Number|This provides the number of occurrences of the pattern with PATTERN_ID for the given number of repositories which were analyzed.
 matches|`PATTERN_ID`|JSON Array|This array has all the data about the change which matched a particular pattern.
 file|each element of `matches`|JSON String|This gives the file name in which the change can be found.
