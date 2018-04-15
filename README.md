@@ -33,6 +33,7 @@ RepoData.json|JSON file which contains the Github repository details. This file 
 
 ## Process Flow
 ----------
+The following image shows the entire flow. Please navigate to the appropriate file and function to get more details about how it is achieved.
 
 ![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/diagrams/Process_Flow.PNG)
  
