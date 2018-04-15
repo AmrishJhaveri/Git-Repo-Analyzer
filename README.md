@@ -6,8 +6,9 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 
 ## Process Flow
 ----------
-1. Query the GitHub API for getting the repository meta data based on search parameters. 
-2. 
+
+![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/images/Process_Flow.PNG)
+ 
 
 ## Getting Started
 
