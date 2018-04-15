@@ -116,7 +116,7 @@ async function getPullRequestsForRepos(repoDetails) {
     // console.log('In getAllPullRequests'+JSON.stringify(repoDetails.data.items,undefined,2));
     //Iterate over each repo data object and call the function getAndConvertData()
     //Returns an array of promises
-    const promises = repoDetails.data.items.map(getAndConvertData);
+    const promises = repoDetails.data.items.map(getPRforRepo);
     //Wait till all promises are resolved.
     await Promise.all(promises);
 
@@ -148,7 +148,7 @@ async function getPullRequestsForRepos(repoDetails) {
  * @param {*} element metadata of one repo.
  * @param {*} index position in the array of repo objects
  */
-async function getAndConvertData(element, index) {
+async function getPRforRepo(element, index) {
 
     // add the repo detail to repoMap(global data structure) with details like id, repo name, owner name and url.
     repoMap[element.full_name] = {
@@ -515,7 +515,7 @@ module.exports = {
     eachFileWithParams,
     processEachPull,
     getPullRequestsForRepos,
-    getAndConvertData,
+    getPRforRepo,
     getAllPullRequests,
     getRepoData
 }

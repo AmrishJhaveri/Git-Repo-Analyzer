@@ -73,7 +73,8 @@ Sample JSON output looks like this:
 		        "pull_request": {
 					...
 				}
-				...
+			 }	
+			...
 			]
 		}
 		"CHANGE_PARAMETERS": {
@@ -90,7 +91,8 @@ Sample JSON output looks like this:
 		        "pull_request": {
 					...
 				}
-				...
+			 }	
+			...
 			]
 		}
 	}	
@@ -98,17 +100,6 @@ Sample JSON output looks like this:
 ## Simple Happy Flow
 
 ----------
-
-
-## Running the tests
-
-----------
-
-
-## Future Work
-
-----------
-- Customized Understand reports for project metrics
 
 
 ## Built With
