@@ -4,12 +4,6 @@
 
 Git-Repo-Analyzer automatically obtains fixes to the source code that developers performed to address bug/issue reports for software applications on Github.
 
-## Process Flow
-----------
-
-![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/diagrams/Process_Flow.PNG)
- 
-
 ## Getting Started
 
 ----------
@@ -39,7 +33,11 @@ RepoData.json|JSON file which contains the Github repository details. This file 
 
 - Run the python script which will read the `RequiredData.json` and modify it to incorporate the impact for the code changes determined by SciTools Understand.
 
+## Process Flow
+----------
 
+![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/diagrams/Process_Flow.PNG)
+ 
 ## Output
 
 ----------
