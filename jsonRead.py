@@ -16,7 +16,11 @@ for match in matches:
 	fName = fileName.split(".")[0]
 	targetEnt = match["change"]["findImpactFor"]
 	
-	op = undScr.getImpacts(relPath,targetEnt,fileName)
+	#op=[]
+	try:
+		op = undScr.getImpacts(relPath,targetEnt,fileName)
+	except:
+		continue
 	#op = os.system("python .\understandscript.py {filePath} {targEnt} {fileName}".format(filePath=relPath,targEnt=targetEnt, fileName=fileName))
 	if op:
 		print(targetEnt,"\t",op)
