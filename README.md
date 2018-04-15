@@ -15,7 +15,7 @@ Git-Repo-Analyzer automatically obtains fixes to the source code that developers
 
 ### Prerequisites
 
-- Node `v9.9.0`
+- Node `v9.9.0`(NPM is installed with Node)
 - Python `v3.6.1`
 - Scitools Understand 4.0(Build 925)
 - Must have registered email address with Understand license key
@@ -53,7 +53,8 @@ file|each element of `matches`|JSON String|This gives the file name in which the
 change|each element of `matches`|JSON Object|Provides details like line number, content1, content2(in case of replacement) and entity for which impact needs to be found.
 ln|`change`|JSON Number|This provides the line number in the `file` at which this change is present
 content1|`change`|JSON String|Provides the content of the change under consideration.
-
+content2|`change`|JSON String|Provides the content of the change with same line number as the one under consideration.It will be present in patterns which consider replacement. If content1 is with + i.e. the content is added, then content2 is with - i.e. content is deleted and vice versa.
+findImpactFor|`change`|JSON String | Provides the entity which can be used by Understand to find the impact of the change in the file.
 
 ## Simple Happy Flow
 
