@@ -459,7 +459,7 @@ async function processFinalJSON(finalJSONarray) {
             element.id = undefined;
             //get the object from the finalResultMap map.
             let changesForPattern = finalResultMap[patternId];
-            
+
             //check if it is defined or undefined.
             //If defined, it means there are previous values.
             if (changesForPattern) {
@@ -493,6 +493,7 @@ async function processFinalJSON(finalJSONarray) {
 async function cloneRepos() {
     try {
         for (var property in repoMap) {
+            console.log('Now Cloning repo:' + repoMap[property].name);
             const { stdout, stderr } = await exec('git clone ' + repoMap[property].url);
             console.log('Repo:', stderr);
         }
