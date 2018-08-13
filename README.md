@@ -1,5 +1,3 @@
-**Note:**	Please view this file in a web browser.
-
 # Git-Repo-Analyzer
 
 Git-Repo-Analyzer automatically obtains fixes to the source code that developers performed to address bug/issue reports for software applications on Github.
@@ -36,7 +34,7 @@ RepoData.json|JSON file which contains the Github repository details. This file 
 ----------
 The following image shows the entire flow. Please navigate to the appropriate file and function to get more details about how it is achieved.
 
-![](https://bitbucket.org/ajhave5/amrish_jhaveri_chinmay_gangal_hw2/raw/master/diagrams/Process_Flow.PNG)
+![](https://github.com/AmrishJhaveri/Git-Repo-Analyzer/blob/master/diagrams/Process_Flow.PNG)
  
 ## Output
 
